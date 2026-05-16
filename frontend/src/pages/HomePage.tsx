@@ -21,7 +21,7 @@ export function HomePage() {
       >
         <VStack gap={6} maxW="640px" mx="auto">
           <Heading as="h1" size="4xl" color="white" fontWeight="extrabold">
-            DS Club へようこそ
+            データサイエンス倶楽部 へようこそ
           </Heading>
           <Text fontSize="xl" color="blue.100">
             データサイエンスを学び、実践し、共に成長するコミュニティ
