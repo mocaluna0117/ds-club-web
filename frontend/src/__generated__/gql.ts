@@ -16,14 +16,22 @@ import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-
 type Documents = {
     "\n  query GetMembers {\n    members {\n      id\n      name\n      role\n      grade\n      bio\n      imageUrl\n      github\n      twitter\n    }\n  }\n": typeof types.GetMembersDocument,
     "\n  query GetPosts {\n    posts {\n      id\n      title\n      excerpt\n      coverImage\n      createdAt\n      author {\n        name\n      }\n    }\n  }\n": typeof types.GetPostsDocument,
+    "\n  query GetActivities {\n    activities {\n      id\n      title\n      excerpt\n      coverImage\n      createdAt\n      author {\n        name\n      }\n    }\n  }\n": typeof types.GetActivitiesDocument,
     "\n  query GetPost($id: Int!) {\n    post(id: $id) {\n      id\n      title\n      content\n      coverImage\n      createdAt\n      updatedAt\n      author {\n        name\n      }\n    }\n  }\n": typeof types.GetPostDocument,
+    "\n  mutation RemoveMember($id: Int!) {\n    removeMember(id: $id) {\n      id\n    }\n  }\n": typeof types.RemoveMemberDocument,
+    "\n  mutation UpdateMember($id: Int!, $input: UpdateMemberInput!) {\n    updateMember(id: $id, input: $input) {\n      id\n    }\n  }\n": typeof types.UpdateMemberDocument,
+    "\n  mutation CreateMember($input: CreateMemberInput!) {\n    createMember(input: $input) {\n      id\n    }\n  }\n": typeof types.CreateMemberDocument,
     "\n  mutation Login($input: LoginInput!) {\n    login(input: $input) {\n      accessToken\n      adminName\n    }\n  }\n": typeof types.LoginDocument,
     "\n  mutation SendContact($input: CreateContactInput!) {\n    sendContact(input: $input) {\n      id\n    }\n  }\n": typeof types.SendContactDocument,
 };
 const documents: Documents = {
     "\n  query GetMembers {\n    members {\n      id\n      name\n      role\n      grade\n      bio\n      imageUrl\n      github\n      twitter\n    }\n  }\n": types.GetMembersDocument,
     "\n  query GetPosts {\n    posts {\n      id\n      title\n      excerpt\n      coverImage\n      createdAt\n      author {\n        name\n      }\n    }\n  }\n": types.GetPostsDocument,
+    "\n  query GetActivities {\n    activities {\n      id\n      title\n      excerpt\n      coverImage\n      createdAt\n      author {\n        name\n      }\n    }\n  }\n": types.GetActivitiesDocument,
     "\n  query GetPost($id: Int!) {\n    post(id: $id) {\n      id\n      title\n      content\n      coverImage\n      createdAt\n      updatedAt\n      author {\n        name\n      }\n    }\n  }\n": types.GetPostDocument,
+    "\n  mutation RemoveMember($id: Int!) {\n    removeMember(id: $id) {\n      id\n    }\n  }\n": types.RemoveMemberDocument,
+    "\n  mutation UpdateMember($id: Int!, $input: UpdateMemberInput!) {\n    updateMember(id: $id, input: $input) {\n      id\n    }\n  }\n": types.UpdateMemberDocument,
+    "\n  mutation CreateMember($input: CreateMemberInput!) {\n    createMember(input: $input) {\n      id\n    }\n  }\n": types.CreateMemberDocument,
     "\n  mutation Login($input: LoginInput!) {\n    login(input: $input) {\n      accessToken\n      adminName\n    }\n  }\n": types.LoginDocument,
     "\n  mutation SendContact($input: CreateContactInput!) {\n    sendContact(input: $input) {\n      id\n    }\n  }\n": types.SendContactDocument,
 };
@@ -53,7 +61,23 @@ export function graphql(source: "\n  query GetPosts {\n    posts {\n      id\n  
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n  query GetActivities {\n    activities {\n      id\n      title\n      excerpt\n      coverImage\n      createdAt\n      author {\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetActivities {\n    activities {\n      id\n      title\n      excerpt\n      coverImage\n      createdAt\n      author {\n        name\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\n  query GetPost($id: Int!) {\n    post(id: $id) {\n      id\n      title\n      content\n      coverImage\n      createdAt\n      updatedAt\n      author {\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetPost($id: Int!) {\n    post(id: $id) {\n      id\n      title\n      content\n      coverImage\n      createdAt\n      updatedAt\n      author {\n        name\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation RemoveMember($id: Int!) {\n    removeMember(id: $id) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation RemoveMember($id: Int!) {\n    removeMember(id: $id) {\n      id\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation UpdateMember($id: Int!, $input: UpdateMemberInput!) {\n    updateMember(id: $id, input: $input) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateMember($id: Int!, $input: UpdateMemberInput!) {\n    updateMember(id: $id, input: $input) {\n      id\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation CreateMember($input: CreateMemberInput!) {\n    createMember(input: $input) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation CreateMember($input: CreateMemberInput!) {\n    createMember(input: $input) {\n      id\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
