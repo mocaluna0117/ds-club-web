@@ -1,22 +1,11 @@
 import { useQuery } from '@apollo/client';
-import { useParams } from 'react-router-dom';
-import { Link as RouterLink } from 'react-router-dom';
+import { useParams, Link as RouterLink } from 'react-router-dom';
 import { Container, Heading, Text, Image, Spinner, Center, Box, Link } from '@chakra-ui/react';
 import { GET_POST } from '../graphql/queries';
 
-interface Post {
-  id: number;
-  title: string;
-  content: string;
-  coverImage?: string;
-  createdAt: string;
-  updatedAt: string;
-  author: { name: string };
-}
-
 export function BlogPostPage() {
   const { id } = useParams<{ id: string }>();
-  const { data, loading, error } = useQuery<{ post: Post }>(GET_POST, {
+  const { data, loading, error } = useQuery(GET_POST, {
     variables: { id: Number(id) },
   });
 

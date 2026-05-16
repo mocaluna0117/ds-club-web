@@ -12,9 +12,7 @@ export function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' });
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [doLogin, { loading, error }] = useMutation<{
-    login: { accessToken: string; adminName: string };
-  }>(LOGIN);
+  const [doLogin, { loading, error }] = useMutation(LOGIN);
 
   const handleSubmit = async () => {
     const { data } = await doLogin({ variables: { input: form } });

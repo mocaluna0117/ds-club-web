@@ -3,19 +3,8 @@ import { Container, Heading, SimpleGrid, Box, Text, Spinner, Center, Link } from
 import { Avatar } from '@chakra-ui/react';
 import { GET_MEMBERS } from '../graphql/queries';
 
-interface Member {
-  id: number;
-  name: string;
-  role: string;
-  grade: number;
-  bio?: string;
-  imageUrl?: string;
-  github?: string;
-  twitter?: string;
-}
-
 export function MembersPage() {
-  const { data, loading, error } = useQuery<{ members: Member[] }>(GET_MEMBERS);
+  const { data, loading, error } = useQuery(GET_MEMBERS);
 
   if (loading) return <Center py={20}><Spinner size="xl" color="blue.500" /></Center>;
   if (error) return <Center py={20}><Text color="gray.500">エラーが発生しました。</Text></Center>;
