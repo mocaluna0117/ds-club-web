@@ -119,6 +119,52 @@ export const SEND_CONTACT = graphql(`
   }
 `);
 
+export const GET_ALL_POSTS_ADMIN = graphql(`
+  query GetAllPostsAdmin {
+    allPosts {
+      id
+      title
+      type
+      published
+      createdAt
+      author {
+        name
+      }
+    }
+  }
+`);
+
+export const UPDATE_POST = graphql(`
+  mutation UpdatePost($id: Int!, $input: UpdatePostInput!) {
+    updatePost(id: $id, input: $input) {
+      id
+      published
+    }
+  }
+`);
+
+export const GET_CONTACTS = graphql(`
+  query GetContacts {
+    contacts {
+      id
+      name
+      email
+      message
+      read
+      createdAt
+    }
+  }
+`);
+
+export const MARK_CONTACT_READ = graphql(`
+  mutation MarkContactRead($id: Int!) {
+    markContactRead(id: $id) {
+      id
+      read
+    }
+  }
+`);
+
 export const GET_TEMPLATES = graphql(`
   query GetTemplates($type: PostType) {
     templates(type: $type) {

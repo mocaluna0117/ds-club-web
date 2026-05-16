@@ -25,6 +25,10 @@ type Documents = {
     "\n  mutation CreateMember($input: CreateMemberInput!) {\n    createMember(input: $input) {\n      id\n    }\n  }\n": typeof types.CreateMemberDocument,
     "\n  mutation Login($input: LoginInput!) {\n    login(input: $input) {\n      accessToken\n      adminName\n    }\n  }\n": typeof types.LoginDocument,
     "\n  mutation SendContact($input: CreateContactInput!) {\n    sendContact(input: $input) {\n      id\n    }\n  }\n": typeof types.SendContactDocument,
+    "\n  query GetAllPostsAdmin {\n    allPosts {\n      id\n      title\n      type\n      published\n      createdAt\n      author {\n        name\n      }\n    }\n  }\n": typeof types.GetAllPostsAdminDocument,
+    "\n  mutation UpdatePost($id: Int!, $input: UpdatePostInput!) {\n    updatePost(id: $id, input: $input) {\n      id\n      published\n    }\n  }\n": typeof types.UpdatePostDocument,
+    "\n  query GetContacts {\n    contacts {\n      id\n      name\n      email\n      message\n      read\n      createdAt\n    }\n  }\n": typeof types.GetContactsDocument,
+    "\n  mutation MarkContactRead($id: Int!) {\n    markContactRead(id: $id) {\n      id\n      read\n    }\n  }\n": typeof types.MarkContactReadDocument,
     "\n  query GetTemplates($type: PostType) {\n    templates(type: $type) {\n      id\n      name\n      type\n      titleTemplate\n      content\n      createdAt\n    }\n  }\n": typeof types.GetTemplatesDocument,
     "\n  mutation CreateTemplate($input: CreateTemplateInput!) {\n    createTemplate(input: $input) {\n      id\n      name\n      type\n      titleTemplate\n      content\n      createdAt\n    }\n  }\n": typeof types.CreateTemplateDocument,
     "\n  mutation RemoveTemplate($id: Int!) {\n    removeTemplate(id: $id) {\n      id\n    }\n  }\n": typeof types.RemoveTemplateDocument,
@@ -41,6 +45,10 @@ const documents: Documents = {
     "\n  mutation CreateMember($input: CreateMemberInput!) {\n    createMember(input: $input) {\n      id\n    }\n  }\n": types.CreateMemberDocument,
     "\n  mutation Login($input: LoginInput!) {\n    login(input: $input) {\n      accessToken\n      adminName\n    }\n  }\n": types.LoginDocument,
     "\n  mutation SendContact($input: CreateContactInput!) {\n    sendContact(input: $input) {\n      id\n    }\n  }\n": types.SendContactDocument,
+    "\n  query GetAllPostsAdmin {\n    allPosts {\n      id\n      title\n      type\n      published\n      createdAt\n      author {\n        name\n      }\n    }\n  }\n": types.GetAllPostsAdminDocument,
+    "\n  mutation UpdatePost($id: Int!, $input: UpdatePostInput!) {\n    updatePost(id: $id, input: $input) {\n      id\n      published\n    }\n  }\n": types.UpdatePostDocument,
+    "\n  query GetContacts {\n    contacts {\n      id\n      name\n      email\n      message\n      read\n      createdAt\n    }\n  }\n": types.GetContactsDocument,
+    "\n  mutation MarkContactRead($id: Int!) {\n    markContactRead(id: $id) {\n      id\n      read\n    }\n  }\n": types.MarkContactReadDocument,
     "\n  query GetTemplates($type: PostType) {\n    templates(type: $type) {\n      id\n      name\n      type\n      titleTemplate\n      content\n      createdAt\n    }\n  }\n": types.GetTemplatesDocument,
     "\n  mutation CreateTemplate($input: CreateTemplateInput!) {\n    createTemplate(input: $input) {\n      id\n      name\n      type\n      titleTemplate\n      content\n      createdAt\n    }\n  }\n": types.CreateTemplateDocument,
     "\n  mutation RemoveTemplate($id: Int!) {\n    removeTemplate(id: $id) {\n      id\n    }\n  }\n": types.RemoveTemplateDocument,
@@ -104,6 +112,22 @@ export function graphql(source: "\n  mutation Login($input: LoginInput!) {\n    
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation SendContact($input: CreateContactInput!) {\n    sendContact(input: $input) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation SendContact($input: CreateContactInput!) {\n    sendContact(input: $input) {\n      id\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetAllPostsAdmin {\n    allPosts {\n      id\n      title\n      type\n      published\n      createdAt\n      author {\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetAllPostsAdmin {\n    allPosts {\n      id\n      title\n      type\n      published\n      createdAt\n      author {\n        name\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation UpdatePost($id: Int!, $input: UpdatePostInput!) {\n    updatePost(id: $id, input: $input) {\n      id\n      published\n    }\n  }\n"): (typeof documents)["\n  mutation UpdatePost($id: Int!, $input: UpdatePostInput!) {\n    updatePost(id: $id, input: $input) {\n      id\n      published\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetContacts {\n    contacts {\n      id\n      name\n      email\n      message\n      read\n      createdAt\n    }\n  }\n"): (typeof documents)["\n  query GetContacts {\n    contacts {\n      id\n      name\n      email\n      message\n      read\n      createdAt\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation MarkContactRead($id: Int!) {\n    markContactRead(id: $id) {\n      id\n      read\n    }\n  }\n"): (typeof documents)["\n  mutation MarkContactRead($id: Int!) {\n    markContactRead(id: $id) {\n      id\n      read\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
