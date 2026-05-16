@@ -3,17 +3,8 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Container, Heading, VStack, Box, Text, Image, Spinner, Center } from '@chakra-ui/react';
 import { GET_POSTS } from '../graphql/queries';
 
-interface Post {
-  id: number;
-  title: string;
-  excerpt?: string;
-  coverImage?: string;
-  createdAt: string;
-  author: { name: string };
-}
-
 export function BlogPage() {
-  const { data, loading, error } = useQuery<{ posts: Post[] }>(GET_POSTS);
+  const { data, loading, error } = useQuery(GET_POSTS);
 
   if (loading) return <Center py={20}><Spinner size="xl" color="blue.500" /></Center>;
   if (error) return <Center py={20}><Text color="gray.500">エラーが発生しました。</Text></Center>;

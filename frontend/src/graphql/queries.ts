@@ -1,6 +1,6 @@
-import { gql } from '@apollo/client';
+import { graphql } from '../__generated__/gql';
 
-export const GET_MEMBERS = gql`
+export const GET_MEMBERS = graphql(`
   query GetMembers {
     members {
       id
@@ -13,9 +13,9 @@ export const GET_MEMBERS = gql`
       twitter
     }
   }
-`;
+`);
 
-export const GET_POSTS = gql`
+export const GET_POSTS = graphql(`
   query GetPosts {
     posts {
       id
@@ -28,9 +28,9 @@ export const GET_POSTS = gql`
       }
     }
   }
-`;
+`);
 
-export const GET_POST = gql`
+export const GET_POST = graphql(`
   query GetPost($id: Int!) {
     post(id: $id) {
       id
@@ -44,21 +44,21 @@ export const GET_POST = gql`
       }
     }
   }
-`;
+`);
 
-export const LOGIN = gql`
+export const LOGIN = graphql(`
   mutation Login($input: LoginInput!) {
     login(input: $input) {
       accessToken
       adminName
     }
   }
-`;
+`);
 
-export const SEND_CONTACT = gql`
+export const SEND_CONTACT = graphql(`
   mutation SendContact($input: CreateContactInput!) {
     sendContact(input: $input) {
       id
     }
   }
-`;
+`);
