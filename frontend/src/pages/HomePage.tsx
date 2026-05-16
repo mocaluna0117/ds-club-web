@@ -50,7 +50,7 @@ export function HomePage() {
               size="lg"
               _hover={{ bg: 'whiteAlpha.200' }}
             >
-              <RouterLink to="/blog">ブログを読む</RouterLink>
+              <RouterLink to="/blog">技術記事を読む</RouterLink>
             </Button>
           </HStack>
         </VStack>

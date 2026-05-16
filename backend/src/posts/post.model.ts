@@ -1,4 +1,11 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { ObjectType, Field, Int, registerEnumType } from '@nestjs/graphql';
+
+export enum PostType {
+  BLOG = 'BLOG',
+  ACTIVITY = 'ACTIVITY',
+}
+
+registerEnumType(PostType, { name: 'PostType' });
 
 @ObjectType()
 export class PostAuthor {
@@ -28,6 +35,9 @@ export class Post {
 
   @Field()
   published: boolean;
+
+  @Field(() => PostType)
+  type: PostType;
 
   @Field(() => PostAuthor)
   author: PostAuthor;

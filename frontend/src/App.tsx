@@ -12,6 +12,7 @@ import { BlogPostPage } from './pages/BlogPostPage';
 import { ContactPage } from './pages/ContactPage';
 import { LoginPage } from './pages/LoginPage';
 import { AdminPage } from './pages/AdminPage';
+import { ActivityPage } from './pages/ActivityPage';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/members" element={<MembersPage />} />
                 <Route path="/blog" element={<BlogPage />} />
+                <Route path="/activities" element={<ActivityPage />} />
                 <Route path="/blog/:id" element={<BlogPostPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/login" element={<LoginPage />} />

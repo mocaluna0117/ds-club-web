@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { PostType } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePostInput, UpdatePostInput } from './post.input';
 
@@ -6,9 +7,12 @@ import { CreatePostInput, UpdatePostInput } from './post.input';
 export class PostsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll(publishedOnly = true) {
+  findAll(publishedOnly = true, type?: PostType) {
     return this.prisma.post.findMany({
-      where: publishedOnly ? { published: true } : undefined,
+      where: {
+        ...(publishedOnly ? { published: true } : {}),
+        ...(type ? { type } : {}),
+      },
       include: { author: { select: { id: true, name: true } } },
       orderBy: { createdAt: 'desc' },
     });

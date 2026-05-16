@@ -1,22 +1,23 @@
 import { useQuery } from '@apollo/client';
 import { Link as RouterLink } from 'react-router-dom';
 import { Container, Heading, VStack, Box, Text, Image, Spinner, Center } from '@chakra-ui/react';
-import { GET_POSTS } from '../graphql/queries';
+import { GET_ACTIVITIES } from '../graphql/queries';
 
-export function BlogPage() {
-  const { data, loading, error } = useQuery(GET_POSTS);
+export function ActivityPage() {
+  const { data, loading, error } = useQuery(GET_ACTIVITIES);
 
   if (loading) return <Center py={20}><Spinner size="xl" color="blue.500" /></Center>;
   if (error) return <Center py={20}><Text color="gray.500">エラーが発生しました。</Text></Center>;
 
   return (
     <Container as="main" maxW="800px" py={12}>
-      <Heading as="h1" size="2xl" mb={8} color="gray.800">技術記事</Heading>
-      {data?.posts.length === 0 && (
-        <Center py={8}><Text color="gray.400">まだ記事がありません。</Text></Center>
+      <Heading as="h1" size="2xl" mb={2} color="gray.800">活動記録</Heading>
+      <Text color="gray.500" mb={8}>サークルの普段の活動を記録しています</Text>
+      {data?.activities.length === 0 && (
+        <Center py={8}><Text color="gray.400">まだ活動記録がありません。</Text></Center>
       )}
       <VStack gap={6} align="stretch">
-        {data?.posts.map((post) => (
+        {data?.activities.map((post) => (
           <RouterLink key={post.id} to={`/blog/${post.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
             <Box
               display="flex"

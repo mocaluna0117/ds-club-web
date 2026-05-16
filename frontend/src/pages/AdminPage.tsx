@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 
 const ADMIN_CARDS = [
   { title: 'メンバー管理', desc: 'メンバーの追加・編集・削除' },
-  { title: '記事管理', desc: 'ブログ記事の作成・編集・公開' },
+  { title: '記事管理', desc: '技術記事・活動記録の作成・編集・公開' },
   { title: 'お問い合わせ', desc: '受信したお問い合わせの確認' },
 ];
 

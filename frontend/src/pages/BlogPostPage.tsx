@@ -17,7 +17,7 @@ export function BlogPostPage() {
   return (
     <Container as="main" maxW="760px" py={12}>
       <Link asChild color="blue.500" fontSize="sm" display="block" mb={6}>
-        <RouterLink to="/blog">← ブログ一覧へ</RouterLink>
+        <RouterLink to="/blog">← 技術記事一覧へ</RouterLink>
       </Link>
       {post.coverImage && (
         <Image src={post.coverImage} alt={post.title} w="full" borderRadius="xl" mb={8} maxH="400px" objectFit="cover" />

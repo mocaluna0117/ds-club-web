@@ -20,6 +20,11 @@ model Member {
   updatedAt DateTime @updatedAt
 }
 
+enum PostType {
+  BLOG
+  ACTIVITY
+}
+
 model Post {
   id          Int      @id @default(autoincrement())
   title       String
@@ -27,6 +32,7 @@ model Post {
   excerpt     String?
   coverImage  String?
   published   Boolean  @default(false)
+  type        PostType @default(BLOG)
   authorId    Int
   author      Admin    @relation(fields: [authorId], references: [id])
   createdAt   DateTime @default(now())

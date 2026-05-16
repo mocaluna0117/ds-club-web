@@ -1,5 +1,6 @@
 import { Resolver, Query, Mutation, Args, Int, Context } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
+import { PostType } from '@prisma/client';
 import { PostsService } from './posts.service';
 import { Post } from './post.model';
 import { CreatePostInput, UpdatePostInput } from './post.input';
@@ -10,8 +11,13 @@ export class PostsResolver {
   constructor(private readonly postsService: PostsService) {}
 
   @Query(() => [Post], { name: 'posts' })
-  findAll() {
-    return this.postsService.findAll(true);
+  findBlogs() {
+    return this.postsService.findAll(true, PostType.BLOG);
+  }
+
+  @Query(() => [Post], { name: 'activities' })
+  findActivities() {
+    return this.postsService.findAll(true, PostType.ACTIVITY);
   }
 
   @UseGuards(JwtAuthGuard)

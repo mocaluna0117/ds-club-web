@@ -1,5 +1,6 @@
-import { InputType, Field, Int } from '@nestjs/graphql';
-import { IsString, IsBoolean, IsOptional, IsInt } from 'class-validator';
+import { InputType, Field } from '@nestjs/graphql';
+import { IsString, IsBoolean, IsOptional, IsEnum } from 'class-validator';
+import { PostType } from './post.model';
 
 @InputType()
 export class CreatePostInput {
@@ -23,6 +24,10 @@ export class CreatePostInput {
   @Field({ defaultValue: false })
   @IsBoolean()
   published: boolean;
+
+  @Field(() => PostType, { defaultValue: PostType.BLOG })
+  @IsEnum(PostType)
+  type: PostType;
 }
 
 @InputType()
@@ -49,4 +54,9 @@ export class UpdatePostInput {
   @IsOptional()
   @IsBoolean()
   published?: boolean;
+
+  @Field(() => PostType, { nullable: true })
+  @IsOptional()
+  @IsEnum(PostType)
+  type?: PostType;
 }

@@ -30,6 +30,21 @@ export const GET_POSTS = graphql(`
   }
 `);
 
+export const GET_ACTIVITIES = graphql(`
+  query GetActivities {
+    activities {
+      id
+      title
+      excerpt
+      coverImage
+      createdAt
+      author {
+        name
+      }
+    }
+  }
+`);
+
 export const GET_POST = graphql(`
   query GetPost($id: Int!) {
     post(id: $id) {
@@ -42,6 +57,30 @@ export const GET_POST = graphql(`
       author {
         name
       }
+    }
+  }
+`);
+
+export const REMOVE_MEMBER = graphql(`
+  mutation RemoveMember($id: Int!) {
+    removeMember(id: $id) {
+      id
+    }
+  }
+`);
+
+export const UPDATE_MEMBER = graphql(`
+  mutation UpdateMember($id: Int!, $input: UpdateMemberInput!) {
+    updateMember(id: $id, input: $input) {
+      id
+    }
+  }
+`);
+
+export const CREATE_MEMBER = graphql(`
+  mutation CreateMember($input: CreateMemberInput!) {
+    createMember(input: $input) {
+      id
     }
   }
 `);
