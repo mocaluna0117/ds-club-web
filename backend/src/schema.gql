@@ -41,6 +41,13 @@ input CreatePostInput {
   type: PostType! = BLOG
 }
 
+input CreateTemplateInput {
+  content: String!
+  name: String!
+  titleTemplate: String!
+  type: PostType!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -66,10 +73,12 @@ type Member {
 type Mutation {
   createMember(input: CreateMemberInput!): Member!
   createPost(input: CreatePostInput!): Post!
+  createTemplate(input: CreateTemplateInput!): Template!
   login(input: LoginInput!): AuthPayload!
   markContactRead(id: Int!): Contact!
   removeMember(id: Int!): Member!
   removePost(id: Int!): Post!
+  removeTemplate(id: Int!): Template!
   sendContact(input: CreateContactInput!): Contact!
   updateMember(id: Int!, input: UpdateMemberInput!): Member!
   updatePost(id: Int!, input: UpdatePostInput!): Post!
@@ -106,6 +115,16 @@ type Query {
   members: [Member!]!
   post(id: Int!): Post!
   posts: [Post!]!
+  templates(type: PostType): [Template!]!
+}
+
+type Template {
+  content: String!
+  createdAt: DateTime!
+  id: Int!
+  name: String!
+  titleTemplate: String!
+  type: PostType!
 }
 
 input UpdateMemberInput {

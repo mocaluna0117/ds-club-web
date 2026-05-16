@@ -8,6 +8,7 @@ import { MembersModule } from './members/members.module';
 import { PostsModule } from './posts/posts.module';
 import { AuthModule } from './auth/auth.module';
 import { ContactModule } from './contact/contact.module';
+import { TemplatesModule } from './templates/templates.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ContactModule } from './contact/contact.module';
     PostsModule,
     AuthModule,
     ContactModule,
+    TemplatesModule,
   ],
 })
 export class AppModule {}

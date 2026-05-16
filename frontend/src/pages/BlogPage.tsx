@@ -1,17 +1,26 @@
 import { useQuery } from '@apollo/client';
 import { Link as RouterLink } from 'react-router-dom';
-import { Container, Heading, VStack, Box, Text, Image, Spinner, Center } from '@chakra-ui/react';
+import { Container, Heading, VStack, Box, Text, Image, Spinner, Center, Flex, Button } from '@chakra-ui/react';
 import { GET_POSTS } from '../graphql/queries';
+import { useAuth } from '../context/AuthContext';
 
 export function BlogPage() {
-  const { data, loading, error } = useQuery(GET_POSTS);
+  const { token } = useAuth();
+  const { data, loading, error } = useQuery(GET_POSTS, { fetchPolicy: 'cache-and-network' });
 
   if (loading) return <Center py={20}><Spinner size="xl" color="blue.500" /></Center>;
   if (error) return <Center py={20}><Text color="gray.500">エラーが発生しました。</Text></Center>;
 
   return (
     <Container as="main" maxW="800px" py={12}>
-      <Heading as="h1" size="2xl" mb={8} color="gray.800">技術記事</Heading>
+      <Flex justify="space-between" align="center" mb={8}>
+        <Heading as="h1" size="2xl" color="gray.800">技術記事</Heading>
+        {token && (
+          <Button asChild colorPalette="blue" size="sm">
+            <RouterLink to="/admin/new-post">+ 記事を書く</RouterLink>
+          </Button>
+        )}
+      </Flex>
       {data?.posts.length === 0 && (
         <Center py={8}><Text color="gray.400">まだ記事がありません。</Text></Center>
       )}
