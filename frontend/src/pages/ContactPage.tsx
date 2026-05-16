@@ -31,7 +31,7 @@ export function ContactPage() {
   return (
     <Container as="main" maxW="600px" py={12}>
       <Heading as="h1" size="2xl" mb={2} color="gray.800">お問い合わせ</Heading>
-      <Text color="gray.500" mb={8}>DS Clubへのご質問・ご相談はこちらから</Text>
+      <Text color="gray.500" mb={8}>データサイエンス倶楽部へのご質問・ご相談はこちらから</Text>
       <Box as="form" onSubmit={(e) => { e.preventDefault(); void handleSubmit(); }}>
         <VStack gap={5} align="stretch">
           <Field.Root required>

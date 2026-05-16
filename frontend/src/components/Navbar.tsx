@@ -9,7 +9,7 @@ export function Navbar() {
     <Box as="nav" bg="white" borderBottom="1px solid" borderColor="gray.200" position="sticky" top={0} zIndex={100}>
       <Flex maxW="960px" mx="auto" px={6} py={4} align="center" justify="space-between">
         <RouterLink to="/" style={{ fontSize: '1.25rem', fontWeight: '800', color: '#2563eb', textDecoration: 'none' }}>
-          DS Club
+          データサイエンス倶楽部
         </RouterLink>
         <HStack gap={6} align="center">
           <NavItem to="/" end>ホーム</NavItem>
