@@ -23,8 +23,11 @@ export function MembersPage() {
   return (
     <Container as="main" maxW="960px" py={12}>
       <Heading as="h1" size="2xl" mb={8} color="gray.800">メンバー紹介</Heading>
+      {(data?.members ?? []).length === 0 && (
+        <Center py={8}><Text color="gray.400">まだメンバーがいません。</Text></Center>
+      )}
       <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap={6}>
-        {data?.members.map((m) => (
+        {(data?.members ?? []).map((m) => (
           <Box
             key={m.id}
             bg="white"
