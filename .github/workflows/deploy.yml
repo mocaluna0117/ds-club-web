@@ -4,7 +4,13 @@ on:
   push:
     branches: [main]
     paths:
-      - 'frontend/**'
+      - 'frontend/**'  # frontend/ 以下のファイルが変更されたときだけ自動デプロイ
+
+  # workflow_dispatch:
+  # GitHub の Actions タブから手動でデプロイを実行したい場合に有効化する。
+  # 例: frontend/ 以外のファイルしか変えていないのに再デプロイしたいとき、
+  #     環境変数 (VITE_API_URL) を変更した後に反映させたいとき。
+  # 有効にするには上の行のコメントアウト (#) を外すだけでよい。
 
 permissions:
   contents: read

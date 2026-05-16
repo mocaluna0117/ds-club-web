@@ -186,6 +186,26 @@ NestJS (npm run start:dev)         NestJS on Render
 
 5. `main` ブランチへのプッシュで自動デプロイ ([.github/workflows/deploy.yml](.github/workflows/deploy.yml) 参照)
 
+### GitHub Pages の自動更新について
+
+`main` ブランチに push すると GitHub Actions が起動し、サイトが自動更新されます。
+
+```
+git push (main)
+    ↓
+GitHub Actions が起動
+    ↓
+npm run build (Vite でビルド)
+    ↓
+dist/ を GitHub Pages にアップロード
+    ↓
+サイトが更新される (数十秒〜1分程度)
+```
+
+**ただし `frontend/` 以下のファイルが変わったときだけ** Actions が起動します。`backend/` や `README.md` だけの変更では Actions は動かないため、不要なデプロイが走りません。
+
+手動でデプロイしたい場合 (環境変数を変えた後など) は、[.github/workflows/deploy.yml](.github/workflows/deploy.yml) 内の `workflow_dispatch:` のコメントアウトを外すと、GitHub の Actions タブから手動実行できるようになります。
+
 ## ディレクトリ構造
 
 ```
