@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
+import { Box, Flex } from '@chakra-ui/react';
 import { apolloClient } from './lib/apolloClient';
 import { AuthProvider } from './context/AuthContext';
 import { Navbar } from './components/Navbar';
@@ -17,9 +18,9 @@ function App() {
     <ApolloProvider client={apolloClient}>
       <AuthProvider>
         <BrowserRouter basename="/ds-club-web">
-          <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+          <Flex minH="100vh" flexDir="column">
             <Navbar />
-            <div style={{ flex: 1 }}>
+            <Box flex={1}>
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/members" element={<MembersPage />} />
@@ -29,9 +30,9 @@ function App() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/admin" element={<AdminPage />} />
               </Routes>
-            </div>
+            </Box>
             <Footer />
-          </div>
+          </Flex>
         </BrowserRouter>
       </AuthProvider>
     </ApolloProvider>
