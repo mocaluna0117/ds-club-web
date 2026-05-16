@@ -51,6 +51,7 @@ export const GET_POST = graphql(`
       id
       title
       content
+      type
       coverImage
       createdAt
       updatedAt
@@ -61,9 +62,25 @@ export const GET_POST = graphql(`
   }
 `);
 
+export const REMOVE_POST = graphql(`
+  mutation RemovePost($id: Int!) {
+    removePost(id: $id) {
+      id
+    }
+  }
+`);
+
 export const REMOVE_MEMBER = graphql(`
   mutation RemoveMember($id: Int!) {
     removeMember(id: $id) {
+      id
+    }
+  }
+`);
+
+export const CREATE_POST = graphql(`
+  mutation CreatePost($input: CreatePostInput!) {
+    createPost(input: $input) {
       id
     }
   }
@@ -97,6 +114,40 @@ export const LOGIN = graphql(`
 export const SEND_CONTACT = graphql(`
   mutation SendContact($input: CreateContactInput!) {
     sendContact(input: $input) {
+      id
+    }
+  }
+`);
+
+export const GET_TEMPLATES = graphql(`
+  query GetTemplates($type: PostType) {
+    templates(type: $type) {
+      id
+      name
+      type
+      titleTemplate
+      content
+      createdAt
+    }
+  }
+`);
+
+export const CREATE_TEMPLATE = graphql(`
+  mutation CreateTemplate($input: CreateTemplateInput!) {
+    createTemplate(input: $input) {
+      id
+      name
+      type
+      titleTemplate
+      content
+      createdAt
+    }
+  }
+`);
+
+export const REMOVE_TEMPLATE = graphql(`
+  mutation RemoveTemplate($id: Int!) {
+    removeTemplate(id: $id) {
       id
     }
   }
