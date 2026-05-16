@@ -1,5 +1,7 @@
 import { useQuery } from '@apollo/client';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
+import { Container, Heading, Text, Image, Spinner, Center, Box, Link } from '@chakra-ui/react';
 import { GET_POST } from '../graphql/queries';
 
 interface Post {
@@ -18,36 +20,31 @@ export function BlogPostPage() {
     variables: { id: Number(id) },
   });
 
-  if (loading) return <div style={styles.center}>読み込み中...</div>;
-  if (error) return <div style={styles.center}>記事が見つかりませんでした。</div>;
+  if (loading) return <Center py={20}><Spinner size="xl" color="blue.500" /></Center>;
+  if (error) return <Center py={20}><Text color="gray.500">記事が見つかりませんでした。</Text></Center>;
 
   const post = data!.post;
 
   return (
-    <main style={styles.main}>
-      <Link to="/blog" style={styles.back}>← ブログ一覧へ</Link>
+    <Container as="main" maxW="760px" py={12}>
+      <Link asChild color="blue.500" fontSize="sm" display="block" mb={6}>
+        <RouterLink to="/blog">← ブログ一覧へ</RouterLink>
+      </Link>
       {post.coverImage && (
-        <img src={post.coverImage} alt={post.title} style={styles.cover} />
+        <Image src={post.coverImage} alt={post.title} w="full" borderRadius="xl" mb={8} maxH="400px" objectFit="cover" />
       )}
-      <h1 style={styles.title}>{post.title}</h1>
-      <div style={styles.meta}>
-        <span>{post.author.name}</span>
-        <span>{new Date(post.createdAt).toLocaleDateString('ja-JP')}</span>
-      </div>
-      <div
-        style={styles.content}
+      <Heading as="h1" size="2xl" fontWeight="extrabold" color="gray.800" mb={3}>
+        {post.title}
+      </Heading>
+      <Box display="flex" gap={4} color="gray.400" fontSize="sm" mb={8}>
+        <Text>{post.author.name}</Text>
+        <Text>{new Date(post.createdAt).toLocaleDateString('ja-JP')}</Text>
+      </Box>
+      <Box
+        lineHeight="tall"
+        color="gray.700"
         dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br/>') }}
       />
-    </main>
+    </Container>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  main: { maxWidth: '760px', margin: '0 auto', padding: '3rem 2rem' },
-  center: { textAlign: 'center', padding: '4rem', color: '#6b7280' },
-  back: { color: '#1d4ed8', textDecoration: 'none', fontSize: '0.9rem', display: 'block', marginBottom: '1.5rem' },
-  cover: { width: '100%', borderRadius: '12px', marginBottom: '2rem', maxHeight: '400px', objectFit: 'cover' },
-  title: { fontSize: '2rem', fontWeight: '800', color: '#111827', marginBottom: '0.75rem' },
-  meta: { display: 'flex', gap: '1rem', color: '#9ca3af', fontSize: '0.875rem', marginBottom: '2rem' },
-  content: { lineHeight: '1.8', color: '#374151', fontSize: '1rem' },
-};

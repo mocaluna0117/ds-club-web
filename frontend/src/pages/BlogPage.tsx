@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
+import { Container, Heading, VStack, Box, Text, Image, Spinner, Center } from '@chakra-ui/react';
 import { GET_POSTS } from '../graphql/queries';
 
 interface Post {
@@ -14,56 +15,44 @@ interface Post {
 export function BlogPage() {
   const { data, loading, error } = useQuery<{ posts: Post[] }>(GET_POSTS);
 
-  if (loading) return <div style={styles.center}>読み込み中...</div>;
-  if (error) return <div style={styles.center}>エラーが発生しました。</div>;
+  if (loading) return <Center py={20}><Spinner size="xl" color="blue.500" /></Center>;
+  if (error) return <Center py={20}><Text color="gray.500">エラーが発生しました。</Text></Center>;
 
   return (
-    <main style={styles.main}>
-      <h1 style={styles.title}>ブログ・活動記録</h1>
-      <div style={styles.list}>
-        {data?.posts.length === 0 && (
-          <p style={styles.empty}>まだ記事がありません。</p>
-        )}
+    <Container as="main" maxW="800px" py={12}>
+      <Heading as="h1" size="2xl" mb={8} color="gray.800">ブログ・活動記録</Heading>
+      {data?.posts.length === 0 && (
+        <Center py={8}><Text color="gray.400">まだ記事がありません。</Text></Center>
+      )}
+      <VStack gap={6} align="stretch">
         {data?.posts.map((post) => (
-          <Link to={`/blog/${post.id}`} key={post.id} style={styles.card}>
-            {post.coverImage && (
-              <img src={post.coverImage} alt={post.title} style={styles.cover} />
-            )}
-            <div style={styles.body}>
-              <h2 style={styles.postTitle}>{post.title}</h2>
-              {post.excerpt && <p style={styles.excerpt}>{post.excerpt}</p>}
-              <div style={styles.meta}>
-                <span>{post.author.name}</span>
-                <span>{new Date(post.createdAt).toLocaleDateString('ja-JP')}</span>
-              </div>
-            </div>
-          </Link>
+          <RouterLink key={post.id} to={`/blog/${post.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Box
+              display="flex"
+              flexDir="column"
+              bg="white"
+              border="1px solid"
+              borderColor="gray.200"
+              borderRadius="xl"
+              overflow="hidden"
+              _hover={{ boxShadow: 'md' }}
+              transition="box-shadow 0.2s"
+            >
+              {post.coverImage && (
+                <Image src={post.coverImage} alt={post.title} h="200px" objectFit="cover" />
+              )}
+              <Box p={6}>
+                <Heading as="h2" size="lg" mb={2} color="gray.800">{post.title}</Heading>
+                {post.excerpt && <Text color="gray.500" lineHeight="tall" mb={4}>{post.excerpt}</Text>}
+                <Box display="flex" gap={4} color="gray.400" fontSize="sm">
+                  <Text>{post.author.name}</Text>
+                  <Text>{new Date(post.createdAt).toLocaleDateString('ja-JP')}</Text>
+                </Box>
+              </Box>
+            </Box>
+          </RouterLink>
         ))}
-      </div>
-    </main>
+      </VStack>
+    </Container>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  main: { maxWidth: '800px', margin: '0 auto', padding: '3rem 2rem' },
-  title: { fontSize: '2rem', fontWeight: '700', marginBottom: '2rem', color: '#111827' },
-  center: { textAlign: 'center', padding: '4rem', color: '#6b7280' },
-  empty: { textAlign: 'center', color: '#9ca3af', padding: '2rem' },
-  list: { display: 'flex', flexDirection: 'column', gap: '1.5rem' },
-  card: {
-    display: 'flex',
-    flexDirection: 'column',
-    background: '#fff',
-    border: '1px solid #e5e7eb',
-    borderRadius: '12px',
-    overflow: 'hidden',
-    textDecoration: 'none',
-    color: 'inherit',
-    transition: 'box-shadow 0.2s',
-  },
-  cover: { width: '100%', height: '200px', objectFit: 'cover' },
-  body: { padding: '1.5rem' },
-  postTitle: { fontSize: '1.3rem', fontWeight: '700', marginBottom: '0.5rem', color: '#111827' },
-  excerpt: { color: '#6b7280', lineHeight: '1.6', marginBottom: '1rem' },
-  meta: { display: 'flex', gap: '1rem', color: '#9ca3af', fontSize: '0.85rem' },
-};

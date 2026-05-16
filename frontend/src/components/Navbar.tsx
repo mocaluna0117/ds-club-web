@@ -1,71 +1,48 @@
-import { Link, NavLink } from 'react-router-dom';
+import { Box, Flex, HStack, Button } from '@chakra-ui/react';
+import { Link as RouterLink, NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 export function Navbar() {
   const { adminName, logout } = useAuth();
 
   return (
-    <nav style={styles.nav}>
-      <Link to="/" style={styles.logo}>DS Club</Link>
-      <div style={styles.links}>
-        <NavLink to="/" end style={navStyle}>ホーム</NavLink>
-        <NavLink to="/members" style={navStyle}>メンバー</NavLink>
-        <NavLink to="/blog" style={navStyle}>ブログ</NavLink>
-        <NavLink to="/contact" style={navStyle}>お問い合わせ</NavLink>
-        {adminName ? (
-          <>
-            <NavLink to="/admin" style={navStyle}>管理</NavLink>
-            <button onClick={logout} style={styles.logoutBtn}>ログアウト</button>
-          </>
-        ) : (
-          <NavLink to="/login" style={navStyle}>管理者ログイン</NavLink>
-        )}
-      </div>
-    </nav>
+    <Box as="nav" bg="white" borderBottom="1px solid" borderColor="gray.200" position="sticky" top={0} zIndex={100}>
+      <Flex maxW="960px" mx="auto" px={6} py={4} align="center" justify="space-between">
+        <RouterLink to="/" style={{ fontSize: '1.25rem', fontWeight: '800', color: '#2563eb', textDecoration: 'none' }}>
+          DS Club
+        </RouterLink>
+        <HStack gap={6} align="center">
+          <NavItem to="/" end>ホーム</NavItem>
+          <NavItem to="/members">メンバー</NavItem>
+          <NavItem to="/blog">ブログ</NavItem>
+          <NavItem to="/contact">お問い合わせ</NavItem>
+          {adminName ? (
+            <>
+              <NavItem to="/admin">管理</NavItem>
+              <Button size="sm" variant="outline" onClick={logout}>ログアウト</Button>
+            </>
+          ) : (
+            <NavItem to="/login">管理者ログイン</NavItem>
+          )}
+        </HStack>
+      </Flex>
+    </Box>
   );
 }
 
-const navStyle = ({ isActive }: { isActive: boolean }) => ({
-  ...styles.link,
-  fontWeight: isActive ? '700' : '400',
-  color: isActive ? '#2563eb' : '#374151',
-});
-
-const styles: Record<string, React.CSSProperties> = {
-  nav: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: '1rem 2rem',
-    background: '#fff',
-    borderBottom: '1px solid #e5e7eb',
-    position: 'sticky',
-    top: 0,
-    zIndex: 100,
-  },
-  logo: {
-    fontSize: '1.5rem',
-    fontWeight: '800',
-    color: '#1d4ed8',
-    textDecoration: 'none',
-  },
-  links: {
-    display: 'flex',
-    gap: '1.5rem',
-    alignItems: 'center',
-  },
-  link: {
-    textDecoration: 'none',
-    fontSize: '0.95rem',
-    transition: 'color 0.2s',
-  },
-  logoutBtn: {
-    background: 'none',
-    border: '1px solid #e5e7eb',
-    borderRadius: '6px',
-    padding: '0.25rem 0.75rem',
-    cursor: 'pointer',
-    fontSize: '0.9rem',
-    color: '#6b7280',
-  },
-};
+function NavItem({ to, end, children }: { to: string; end?: boolean; children: React.ReactNode }) {
+  return (
+    <NavLink
+      to={to}
+      end={end}
+      style={({ isActive }) => ({
+        textDecoration: 'none',
+        fontWeight: isActive ? '700' : '400',
+        color: isActive ? '#2563eb' : '#374151',
+        fontSize: '0.95rem',
+      })}
+    >
+      {children}
+    </NavLink>
+  );
+}

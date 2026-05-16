@@ -1,4 +1,6 @@
 import { useQuery } from '@apollo/client';
+import { Container, Heading, SimpleGrid, Box, Text, Spinner, Center, Link } from '@chakra-ui/react';
+import { Avatar } from '@chakra-ui/react';
 import { GET_MEMBERS } from '../graphql/queries';
 
 interface Member {
@@ -15,77 +17,50 @@ interface Member {
 export function MembersPage() {
   const { data, loading, error } = useQuery<{ members: Member[] }>(GET_MEMBERS);
 
-  if (loading) return <div style={styles.center}>読み込み中...</div>;
-  if (error) return <div style={styles.center}>エラーが発生しました。</div>;
+  if (loading) return <Center py={20}><Spinner size="xl" color="blue.500" /></Center>;
+  if (error) return <Center py={20}><Text color="gray.500">エラーが発生しました。</Text></Center>;
 
   return (
-    <main style={styles.main}>
-      <h1 style={styles.title}>メンバー紹介</h1>
-      <div style={styles.grid}>
+    <Container as="main" maxW="960px" py={12}>
+      <Heading as="h1" size="2xl" mb={8} color="gray.800">メンバー紹介</Heading>
+      <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap={6}>
         {data?.members.map((m) => (
-          <div key={m.id} style={styles.card}>
-            <div style={styles.avatar}>
-              {m.imageUrl ? (
-                <img src={m.imageUrl} alt={m.name} style={styles.img} />
-              ) : (
-                <div style={styles.avatarFallback}>{m.name[0]}</div>
-              )}
-            </div>
-            <h2 style={styles.name}>{m.name}</h2>
-            <p style={styles.role}>{m.role}</p>
-            <p style={styles.grade}>{m.grade}回生</p>
-            {m.bio && <p style={styles.bio}>{m.bio}</p>}
-            <div style={styles.socials}>
+          <Box
+            key={m.id}
+            bg="white"
+            border="1px solid"
+            borderColor="gray.200"
+            borderRadius="xl"
+            p={6}
+            textAlign="center"
+          >
+            <Box mb={4} display="flex" justifyContent="center">
+              <Avatar.Root size="xl">
+                {m.imageUrl
+                  ? <Avatar.Image src={m.imageUrl} />
+                  : <Avatar.Fallback>{m.name[0]}</Avatar.Fallback>
+                }
+              </Avatar.Root>
+            </Box>
+            <Heading as="h2" size="md" mb={1} color="gray.800">{m.name}</Heading>
+            <Text color="blue.600" fontWeight="semibold" fontSize="sm" mb={1}>{m.role}</Text>
+            <Text color="gray.400" fontSize="xs" mb={3}>{m.grade}回生</Text>
+            {m.bio && <Text color="gray.500" fontSize="sm" lineHeight="tall" mb={4}>{m.bio}</Text>}
+            <Box display="flex" gap={3} justifyContent="center">
               {m.github && (
-                <a href={`https://github.com/${m.github}`} target="_blank" rel="noopener noreferrer" style={styles.socialLink}>
+                <Link href={`https://github.com/${m.github}`} target="_blank" rel="noopener noreferrer" color="blue.500" fontSize="sm">
                   GitHub
-                </a>
+                </Link>
               )}
               {m.twitter && (
-                <a href={`https://twitter.com/${m.twitter}`} target="_blank" rel="noopener noreferrer" style={styles.socialLink}>
+                <Link href={`https://twitter.com/${m.twitter}`} target="_blank" rel="noopener noreferrer" color="blue.500" fontSize="sm">
                   Twitter
-                </a>
+                </Link>
               )}
-            </div>
-          </div>
+            </Box>
+          </Box>
         ))}
-      </div>
-    </main>
+      </SimpleGrid>
+    </Container>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  main: { maxWidth: '960px', margin: '0 auto', padding: '3rem 2rem' },
-  title: { fontSize: '2rem', fontWeight: '700', marginBottom: '2rem', color: '#111827' },
-  center: { textAlign: 'center', padding: '4rem', color: '#6b7280' },
-  grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.5rem' },
-  card: {
-    background: '#fff',
-    border: '1px solid #e5e7eb',
-    borderRadius: '12px',
-    padding: '1.5rem',
-    textAlign: 'center',
-    transition: 'box-shadow 0.2s',
-  },
-  avatar: { marginBottom: '1rem' },
-  img: { width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover' },
-  avatarFallback: {
-    width: '80px',
-    height: '80px',
-    borderRadius: '50%',
-    background: '#dbeafe',
-    color: '#1d4ed8',
-    fontSize: '2rem',
-    fontWeight: '700',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: '0 auto',
-  },
-  name: { fontSize: '1.1rem', fontWeight: '700', marginBottom: '0.25rem', color: '#111827' },
-  role: { color: '#1d4ed8', fontWeight: '600', fontSize: '0.9rem', marginBottom: '0.25rem' },
-  grade: { color: '#9ca3af', fontSize: '0.85rem', marginBottom: '0.75rem' },
-  bio: { color: '#6b7280', fontSize: '0.875rem', lineHeight: '1.5', marginBottom: '1rem' },
-  socials: { display: 'flex', gap: '0.75rem', justifyContent: 'center' },
-  socialLink: { color: '#1d4ed8', fontSize: '0.85rem', textDecoration: 'none' },
-};
