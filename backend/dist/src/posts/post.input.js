@@ -1,0 +1,105 @@
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UpdatePostInput = exports.CreatePostInput = void 0;
+const graphql_1 = require("@nestjs/graphql");
+const class_validator_1 = require("class-validator");
+const post_model_1 = require("./post.model");
+let CreatePostInput = class CreatePostInput {
+    title;
+    content;
+    excerpt;
+    coverImage;
+    published;
+    type;
+};
+exports.CreatePostInput = CreatePostInput;
+__decorate([
+    (0, graphql_1.Field)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreatePostInput.prototype, "title", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreatePostInput.prototype, "content", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreatePostInput.prototype, "excerpt", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreatePostInput.prototype, "coverImage", void 0);
+__decorate([
+    (0, graphql_1.Field)({ defaultValue: false }),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], CreatePostInput.prototype, "published", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => post_model_1.PostType, { defaultValue: post_model_1.PostType.BLOG }),
+    (0, class_validator_1.IsEnum)(post_model_1.PostType),
+    __metadata("design:type", String)
+], CreatePostInput.prototype, "type", void 0);
+exports.CreatePostInput = CreatePostInput = __decorate([
+    (0, graphql_1.InputType)()
+], CreatePostInput);
+let UpdatePostInput = class UpdatePostInput {
+    title;
+    content;
+    excerpt;
+    coverImage;
+    published;
+    type;
+};
+exports.UpdatePostInput = UpdatePostInput;
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], UpdatePostInput.prototype, "title", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], UpdatePostInput.prototype, "content", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], UpdatePostInput.prototype, "excerpt", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], UpdatePostInput.prototype, "coverImage", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], UpdatePostInput.prototype, "published", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => post_model_1.PostType, { nullable: true }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsEnum)(post_model_1.PostType),
+    __metadata("design:type", String)
+], UpdatePostInput.prototype, "type", void 0);
+exports.UpdatePostInput = UpdatePostInput = __decorate([
+    (0, graphql_1.InputType)()
+], UpdatePostInput);
+//# sourceMappingURL=post.input.js.map
