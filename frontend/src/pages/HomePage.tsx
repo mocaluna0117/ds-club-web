@@ -1,10 +1,13 @@
 import { Box, Container, Heading, Text, SimpleGrid, VStack, HStack, Button } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 
+const BASE = import.meta.env.BASE_URL;
+
 const FEATURES = [
-  { icon: '📊', title: 'データ分析', desc: '実データを使った分析プロジェクトを定期開催' },
-  { icon: '🤖', title: '機械学習', desc: 'ML/DLの理論から実装まで勉強会で学習' },
-  { icon: '🏆', title: 'コンペ参加', desc: 'Kaggle等のコンペにチームで挑戦' },
+  { icon: `${BASE}python_icon.png`, title: 'Pythonの学習', desc: 'Pythonの基礎からPandas, Matplotlib, Scikit-learnなどを勉強会を通じて学習' },
+  { icon: `${BASE}data_analysis.png`, title: 'データ分析の学習', desc: '簡単なデータを使ったデータ分析の基礎を学ぶ' },
+  { icon: `${BASE}compe.png`, title: 'コンペ参加', desc: 'Kaggle等のコンペにチームで参加' },
+  { icon: `${BASE}paiza_atcoder.png`, title: '競技プログラミング', desc: 'AtCoderやPaizaで競技プログラミングに参加' },
 ];
 
 export function HomePage() {
@@ -15,26 +18,26 @@ export function HomePage() {
         bgGradient="to-br"
         gradientFrom="blue.700"
         gradientTo="purple.600"
-        py={24}
+        py={12}
         px={8}
         textAlign="center"
       >
-        <VStack gap={6} maxW="640px" mx="auto">
-<Heading as="h1" size="4xl" color="white" fontWeight="extrabold">
+        <VStack gap={5} maxW="640px" mx="auto">
+          <Heading as="h1" size="3xl" color="white" fontWeight="extrabold">
             データサイエンス倶楽部 へようこそ
           </Heading>
-          <Text fontSize="xl" color="blue.100">
+          <Text fontSize="lg" color="blue.100">
             データサイエンスを学び、実践し、共に成長するコミュニティ
           </Text>
-          <HStack gap={4} flexWrap="wrap" justify="center">
+          <HStack gap={3} flexWrap="wrap" justify="center">
             <Button
               asChild
               bg="white"
               color="blue.700"
               borderRadius="full"
               fontWeight="bold"
-              px={8}
-              size="lg"
+              px={6}
+              size="md"
               _hover={{ bg: 'blue.50' }}
             >
               <RouterLink to="/members">メンバーを見る</RouterLink>
@@ -46,8 +49,8 @@ export function HomePage() {
               borderColor="whiteAlpha.600"
               borderRadius="full"
               fontWeight="bold"
-              px={8}
-              size="lg"
+              px={6}
+              size="md"
               _hover={{ bg: 'whiteAlpha.200' }}
             >
               <RouterLink to="/blog">技術記事を読む</RouterLink>
@@ -56,28 +59,34 @@ export function HomePage() {
         </VStack>
       </Box>
 
-      <Container as="section" maxW="960px" py={16}>
-        <Heading as="h2" size="2xl" textAlign="center" mb={10} color="gray.800">
-          活動内容
-        </Heading>
-        <SimpleGrid columns={{ base: 1, md: 3 }} gap={6}>
-          {FEATURES.map((f) => (
-            <Box
-              key={f.title}
-              p={8}
-              bg="gray.50"
-              borderRadius="xl"
-              border="1px solid"
-              borderColor="gray.200"
-              textAlign="center"
-            >
-              <Text fontSize="4xl" mb={4}>{f.icon}</Text>
-              <Heading as="h3" size="md" mb={2} color="gray.800">{f.title}</Heading>
-              <Text color="gray.500" lineHeight="tall">{f.desc}</Text>
-            </Box>
-          ))}
-        </SimpleGrid>
-      </Container>
+      <Box as="section" bg="white">
+        <Container maxW="900px" py={10}>
+          <Heading as="h2" size="xl" textAlign="center" mb={7} color="gray.800">
+            活動内容
+          </Heading>
+          <SimpleGrid columns={2} gap={6}>
+            {FEATURES.map((f) => (
+              <Box
+                key={f.title}
+                p={8}
+                bg="gray.50"
+                borderRadius="2xl"
+                border="1px solid"
+                borderColor="gray.200"
+                display="flex"
+                alignItems="center"
+                gap={6}
+              >
+                <img src={f.icon} alt={f.title} style={{ height: '88px', width: '88px', objectFit: 'contain', flexShrink: 0 }} />
+                <Box textAlign="left">
+                  <Heading as="h3" size="md" mb={2} color="gray.800">{f.title}</Heading>
+                  <Text color="gray.500" fontSize="md" lineHeight="tall">{f.desc}</Text>
+                </Box>
+              </Box>
+            ))}
+          </SimpleGrid>
+        </Container>
+      </Box>
     </Box>
   );
 }
