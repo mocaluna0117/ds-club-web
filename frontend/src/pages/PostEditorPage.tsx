@@ -55,7 +55,11 @@ export function PostEditorPage() {
 
     if (isEdit) {
       const { data } = await updatePost({
-        variables: { id: Number(id), input: { title, content, published: publish } },
+        variables: {
+          id: Number(id),
+          // 「更新する」のみ published: true を送る。下書き保存は published を変えない
+          input: publish ? { title, content, published: true } : { title, content },
+        },
       });
       if (data) navigate(type === 'ACTIVITY' ? `/activities/${id}` : `/blog/${id}`);
     } else {
