@@ -20,7 +20,7 @@ export function HomePage() {
         textAlign="center"
       >
         <VStack gap={6} maxW="640px" mx="auto">
-          <Heading as="h1" size="4xl" color="white" fontWeight="extrabold">
+<Heading as="h1" size="4xl" color="white" fontWeight="extrabold">
             データサイエンス倶楽部 へようこそ
           </Heading>
           <Text fontSize="xl" color="blue.100">
