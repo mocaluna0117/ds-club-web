@@ -3,7 +3,7 @@ import { useQuery, useMutation } from '@apollo/client';
 import { useParams, Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   Container, Heading, Text, Image, Spinner, Center, Box, Link,
-  Button, Flex, Dialog,
+  Button, Flex, HStack, Dialog,
 } from '@chakra-ui/react';
 import 'katex/dist/katex.min.css';
 import '../components/editor/editor.css';
@@ -40,9 +40,14 @@ export function BlogPostPage() {
           <RouterLink to={backTo}>{backLabel}</RouterLink>
         </Link>
         {token && (
-          <Button size="xs" colorPalette="red" variant="outline" onClick={() => setDeleteOpen(true)}>
-            削除
-          </Button>
+          <HStack gap={2}>
+            <Button asChild size="xs" colorPalette="blue" variant="outline">
+              <RouterLink to={`/admin/edit-post/${post.id}`}>編集</RouterLink>
+            </Button>
+            <Button size="xs" colorPalette="red" variant="outline" onClick={() => setDeleteOpen(true)}>
+              削除
+            </Button>
+          </HStack>
         )}
       </Flex>
 

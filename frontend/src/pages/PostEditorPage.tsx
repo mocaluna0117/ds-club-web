@@ -1,49 +1,80 @@
-import { useState } from 'react';
-import { useMutation } from '@apollo/client';
-import { useNavigate, Navigate, useSearchParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useQuery, useMutation } from '@apollo/client';
+import { useNavigate, Navigate, useSearchParams, useParams } from 'react-router-dom';
 import {
   Container, Heading, VStack, Input, Button, HStack,
-  Box, Text, Flex, Badge,
+  Box, Text, Flex, Badge, Spinner, Center,
 } from '@chakra-ui/react';
 import { Field } from '@chakra-ui/react';
 import { RichTextEditor } from '../components/editor/RichTextEditor';
 import { TemplateModal } from '../components/editor/TemplateModal';
-import { CREATE_POST } from '../graphql/queries';
+import { CREATE_POST, UPDATE_POST, GET_POST } from '../graphql/queries';
 import { useAuth } from '../context/AuthContext';
 
 export function PostEditorPage() {
   const { token } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [createPost, { loading }] = useMutation(CREATE_POST);
+  const { id } = useParams<{ id: string }>();
+  const isEdit = !!id;
+
+  const [createPost, { loading: creating }] = useMutation(CREATE_POST);
+  const [updatePost, { loading: updating }] = useMutation(UPDATE_POST);
+  const loading = creating || updating;
+
+  const { data: postData, loading: postLoading } = useQuery(GET_POST, {
+    variables: { id: Number(id) },
+    skip: !isEdit,
+  });
 
   const type: 'BLOG' | 'ACTIVITY' =
-    searchParams.get('type') === 'ACTIVITY' ? 'ACTIVITY' : 'BLOG';
+    postData?.post?.type === 'ACTIVITY'
+      ? 'ACTIVITY'
+      : searchParams.get('type') === 'ACTIVITY'
+      ? 'ACTIVITY'
+      : 'BLOG';
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [templateOpen, setTemplateOpen] = useState(false);
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    if (isEdit && postData?.post && !initialized) {
+      setTitle(postData.post.title);
+      setContent(postData.post.content);
+      setInitialized(true);
+    }
+  }, [isEdit, postData, initialized]);
 
   if (!token) return <Navigate to="/login" replace />;
+  if (isEdit && postLoading) return <Center py={20}><Spinner size="xl" color="blue.500" /></Center>;
 
   const handleSubmit = async (publish: boolean) => {
     if (!title.trim()) return;
-    const { data } = await createPost({
-      variables: {
-        input: { title, content, type, published: publish },
-      },
-    });
-    if (data) navigate(type === 'ACTIVITY' ? '/activities' : '/blog');
+
+    if (isEdit) {
+      const { data } = await updatePost({
+        variables: { id: Number(id), input: { title, content, published: publish } },
+      });
+      if (data) navigate(type === 'ACTIVITY' ? `/activities/${id}` : `/blog/${id}`);
+    } else {
+      const { data } = await createPost({
+        variables: { input: { title, content, type, published: publish } },
+      });
+      if (data) navigate(type === 'ACTIVITY' ? '/activities' : '/blog');
+    }
   };
 
   return (
     <Container maxW="800px" py={10}>
       <VStack gap={6} align="stretch">
-        {/* ヘッダー */}
         <Flex justify="space-between" align="center">
           <HStack gap={3}>
             <Heading as="h1" size="xl" color="gray.800">
-              {type === 'ACTIVITY' ? '新しい活動記録' : '新しい技術記事'}
+              {isEdit
+                ? type === 'ACTIVITY' ? '活動記録を編集' : '技術記事を編集'
+                : type === 'ACTIVITY' ? '新しい活動記録' : '新しい技術記事'}
             </Heading>
             <Badge
               colorPalette={type === 'ACTIVITY' ? 'teal' : 'blue'}
@@ -54,9 +85,11 @@ export function PostEditorPage() {
             </Badge>
           </HStack>
           <HStack gap={3}>
-            <Button variant="outline" size="sm" onClick={() => setTemplateOpen(true)}>
-              テンプレート
-            </Button>
+            {!isEdit && (
+              <Button variant="outline" size="sm" onClick={() => setTemplateOpen(true)}>
+                テンプレート
+              </Button>
+            )}
             <Button variant="outline" size="sm" onClick={() => void handleSubmit(false)} loading={loading}>
               下書き保存
             </Button>
@@ -67,12 +100,11 @@ export function PostEditorPage() {
               loading={loading}
               disabled={!title.trim()}
             >
-              公開する
+              {isEdit ? '更新する' : '公開する'}
             </Button>
           </HStack>
         </Flex>
 
-        {/* タイトル */}
         <Field.Root required>
           <Input
             placeholder="タイトルを入力..."
@@ -89,7 +121,6 @@ export function PostEditorPage() {
           />
         </Field.Root>
 
-        {/* エディタ */}
         <Box
           border="1px solid"
           borderColor="gray.200"
@@ -103,18 +134,20 @@ export function PostEditorPage() {
 
         <Text fontSize="xs" color="gray.400">
           <strong>/</strong> でコマンドメニューを開く
-          <strong>$$...$$</strong> で LaTeX 数式（例: <code>$$\int f(x)dx$$</code>）
+          　<strong>$$...$$</strong> で LaTeX 数式（例: <code>$$\int f(x)dx$$</code>）
         </Text>
       </VStack>
 
-      <TemplateModal
-        open={templateOpen}
-        onClose={() => setTemplateOpen(false)}
-        type={type}
-        currentTitle={title}
-        currentContent={content}
-        onApply={(t, c) => { setTitle(t); setContent(c); }}
-      />
+      {!isEdit && (
+        <TemplateModal
+          open={templateOpen}
+          onClose={() => setTemplateOpen(false)}
+          type={type}
+          currentTitle={title}
+          currentContent={content}
+          onApply={(t, c) => { setTitle(t); setContent(c); }}
+        />
+      )}
     </Container>
   );
 }

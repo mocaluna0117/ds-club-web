@@ -34,6 +34,7 @@ function App() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/admin" element={<AdminPage />} />
                 <Route path="/admin/new-post" element={<PostEditorPage />} />
+                <Route path="/admin/edit-post/:id" element={<PostEditorPage />} />
               </Routes>
             </Box>
             <Footer />
