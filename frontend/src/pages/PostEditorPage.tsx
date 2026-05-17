@@ -91,6 +91,11 @@ export function PostEditorPage() {
             </Badge>
           </HStack>
           <HStack gap={3}>
+            {isEdit && (
+              <Button variant="outline" size="sm" onClick={() => navigate(type === 'ACTIVITY' ? `/activities/${id}` : `/blog/${id}`)}>
+                ← 戻る
+              </Button>
+            )}
             {!isEdit && (
               <>
                 <Button variant="outline" size="sm" onClick={() => setTemplateOpen(true)}>
