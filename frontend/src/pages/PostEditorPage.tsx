@@ -92,13 +92,15 @@ export function PostEditorPage() {
           </HStack>
           <HStack gap={3}>
             {!isEdit && (
-              <Button variant="outline" size="sm" onClick={() => setTemplateOpen(true)}>
-                テンプレート
-              </Button>
+              <>
+                <Button variant="outline" size="sm" onClick={() => setTemplateOpen(true)}>
+                  テンプレート
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => void handleSubmit(false)} loading={loading}>
+                  下書き保存
+                </Button>
+              </>
             )}
-            <Button variant="outline" size="sm" onClick={() => void handleSubmit(false)} loading={loading}>
-              下書き保存
-            </Button>
             <Button
               colorPalette={type === 'ACTIVITY' ? 'teal' : 'blue'}
               size="sm"
@@ -106,7 +108,7 @@ export function PostEditorPage() {
               loading={loading}
               disabled={!title.trim()}
             >
-              {isEdit ? '更新する' : '公開する'}
+              {isEdit ? '変更を保存' : '公開する'}
             </Button>
           </HStack>
         </Flex>
