@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script>
+    // GitHub Pages SPA redirect: encode the path into a query param and redirect to index.html
+    // pathSegmentsToKeep=1 because the site lives at /ds-club-web/
+    var l = window.location;
+    l.replace(
+      l.protocol + '//' + l.host + '/' +
+      l.pathname.split('/').slice(0, 2).join('/') + '/?p=/' +
+      l.pathname.split('/').slice(2).join('/').replace(/&/g, '~and~') +
+      (l.search ? '&q=' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+      l.hash
+    );
+  </script>
+</head>
+<body></body>
+</html>
