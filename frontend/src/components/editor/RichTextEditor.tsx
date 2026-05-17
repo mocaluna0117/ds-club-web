@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useQuery } from '@apollo/client';
 import { useEditor, EditorContent, ReactRenderer } from '@tiptap/react';
 import { BubbleMenu } from '@tiptap/react/menus';
+import { Mark, mergeAttributes } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import Mention from '@tiptap/extension-mention';
@@ -14,6 +15,32 @@ import './editor.css';
 import { SlashCommand } from './SlashCommand';
 import { MentionList, type MentionItem } from './MentionList';
 import { GET_MEMBERS } from '../../graphql/queries';
+
+const FONT_SIZES = [
+  { label: '小', value: '13px' },
+  { label: '標準', value: '' },
+  { label: '大', value: '20px' },
+  { label: '特大', value: '26px' },
+];
+
+const FontSize = Mark.create({
+  name: 'fontSize',
+  addAttributes() {
+    return {
+      size: {
+        default: null,
+        parseHTML: (el) => (el as HTMLElement).style.fontSize || null,
+        renderHTML: (attrs) => attrs.size ? { style: `font-size: ${attrs.size}` } : {},
+      },
+    };
+  },
+  parseHTML() {
+    return [{ tag: 'span[style*="font-size"]' }];
+  },
+  renderHTML({ HTMLAttributes }) {
+    return ['span', mergeAttributes(HTMLAttributes), 0];
+  },
+});
 
 type Props = {
   content: string;
@@ -33,6 +60,7 @@ export function RichTextEditor({ content, onChange }: Props) {
   const editor = useEditor({
     extensions: [
       StarterKit,
+      FontSize,
       Image.configure({ inline: false }),
       Mathematics,
       Placeholder.configure({ placeholder: '/ でコマンドを呼び出す、または自由に書き始めてください...' }),
@@ -113,6 +141,23 @@ export function RichTextEditor({ content, onChange }: Props) {
           <button onClick={() => editor.chain().focus().toggleCode().run()} className={editor.isActive('code') ? 'active' : ''}>
             {'<>'}
           </button>
+          <div className="bubble-separator" />
+          <select
+            className="bubble-font-size"
+            value={editor.getAttributes('fontSize').size ?? ''}
+            onChange={(e) => {
+              const size = e.target.value;
+              if (size) {
+                (editor.chain().focus() as any).setMark('fontSize', { size }).run();
+              } else {
+                (editor.chain().focus() as any).unsetMark('fontSize').run();
+              }
+            }}
+          >
+            {FONT_SIZES.map((s) => (
+              <option key={s.label} value={s.value}>{s.label}</option>
+            ))}
+          </select>
         </div>
       </BubbleMenu>
 

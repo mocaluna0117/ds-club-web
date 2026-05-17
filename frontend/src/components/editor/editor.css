@@ -2,7 +2,7 @@
 .tiptap {
   outline: none;
   min-height: 480px;
-  font-size: 1rem;
+  font-size: 1.1rem;
   line-height: 1.8;
   color: #1a202c;
 }
@@ -91,6 +91,26 @@
 }
 .bubble-menu button:hover,
 .bubble-menu button.active { background: #334155; }
+
+.bubble-separator {
+  width: 1px;
+  background: #475569;
+  margin: 2px 2px;
+  align-self: stretch;
+}
+
+.bubble-font-size {
+  background: none;
+  border: none;
+  color: #e2e8f0;
+  font-size: 0.8rem;
+  padding: 4px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+}
+.bubble-font-size:hover { background: #334155; }
+.bubble-font-size option { background: #1e293b; color: #e2e8f0; }
 
 /* スラッシュコマンドメニュー */
 .slash-menu {
