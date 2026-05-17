@@ -102,7 +102,7 @@ export function PostEditorPage() {
                   テンプレート
                 </Button>
                 <Button variant="outline" size="sm" onClick={() => void handleSubmit(false)} loading={loading}>
-                  下書き保存
+                  非公開で保存
                 </Button>
               </>
             )}
