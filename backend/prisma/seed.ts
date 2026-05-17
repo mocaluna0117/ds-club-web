@@ -11,11 +11,15 @@ const MEMBERS = [
 
 async function main() {
   // Admin
-  const passwordHash = await bcrypt.hash('moca0425', 12);
+  const email    = process.env.ADMIN_EMAIL    ?? 'd244022c@yokohama-cu.ac.jp';
+  const password = process.env.ADMIN_PASSWORD ?? 'moca0425';
+  const name     = process.env.ADMIN_NAME     ?? '木村大暉';
+
+  const passwordHash = await bcrypt.hash(password, 12);
   const admin = await prisma.admin.upsert({
-    where: { email: 'd244022c@yokohama-cu.ac.jp' },
+    where: { email },
     update: {},
-    create: { email: 'd244022c@yokohama-cu.ac.jp', passwordHash, name: '木村大暉' },
+    create: { email, passwordHash, name },
   });
   console.log(`Admin: ${admin.name} (${admin.email})`);
 
