@@ -19,7 +19,7 @@ function App() {
   return (
     <ApolloProvider client={apolloClient}>
       <AuthProvider>
-        <BrowserRouter basename="/ds-club-web">
+        <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
           <Flex minH="100vh" flexDir="column">
             <Navbar />
             <Box flex={1}>
