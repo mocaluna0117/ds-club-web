@@ -9,7 +9,7 @@ export function Navbar() {
     <Box as="nav" bg="white" borderBottom="1px solid" borderColor="gray.200" position="sticky" top={0} zIndex={100}>
       <Flex px={8} py={4} align="center" justify="space-between">
         <RouterLink to="/" style={{ textDecoration: 'none', flexShrink: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <img src="/ds_club_icon.png" alt="データサイエンス倶楽部" style={{ height: '68px', objectFit: 'contain' }} />
+          <img src={`${import.meta.env.BASE_URL}ds_club_icon.png`} alt="データサイエンス倶楽部" style={{ height: '68px', objectFit: 'contain' }} />
           <span style={{ fontSize: '1.1rem', fontWeight: '800', color: '#2563eb', whiteSpace: 'nowrap' }}>データサイエンス倶楽部</span>
         </RouterLink>
         <HStack gap={4} align="center" flexShrink={0}>
