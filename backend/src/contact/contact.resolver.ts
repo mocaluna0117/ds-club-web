@@ -25,4 +25,5 @@ export class ContactResolver {
   markContactRead(@Args('id', { type: () => Int }) id: number) {
     return this.contactService.markRead(id);
   }
+
 }

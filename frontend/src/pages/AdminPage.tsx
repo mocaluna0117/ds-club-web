@@ -132,7 +132,8 @@ export function AdminPage() {
                     </Text>
                   </Box>
                   {!c.read && (
-                    <Button size="xs" variant="outline" onClick={() => void markRead({ variables: { id: c.id } })}>
+                    <Button size="xs" variant="outline" flexShrink={0}
+                      onClick={() => void markRead({ variables: { id: c.id } })}>
                       既読にする
                     </Button>
                   )}
@@ -221,8 +222,7 @@ function PostList({ posts, onDelete, onTogglePublish }: {
             <Badge colorPalette={p.published ? 'green' : 'gray'} size="sm">
               {p.published ? '公開中' : '下書き'}
             </Badge>
-            <Button size="xs" variant="outline"
-              onClick={() => onTogglePublish(p)}>
+            <Button size="xs" variant="outline" onClick={() => onTogglePublish(p)}>
               {p.published ? '非公開にする' : '公開する'}
             </Button>
             <Button size="xs" colorPalette="red" variant="outline"

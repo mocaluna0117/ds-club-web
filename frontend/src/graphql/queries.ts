@@ -165,6 +165,7 @@ export const MARK_CONTACT_READ = graphql(`
   }
 `);
 
+
 export const GET_TEMPLATES = graphql(`
   query GetTemplates($type: PostType) {
     templates(type: $type) {

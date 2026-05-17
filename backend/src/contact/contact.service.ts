@@ -17,4 +17,5 @@ export class ContactService {
   markRead(id: number) {
     return this.prisma.contact.update({ where: { id }, data: { read: true } });
   }
+
 }
