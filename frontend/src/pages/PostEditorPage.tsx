@@ -60,6 +60,8 @@ export function PostEditorPage() {
           // 「更新する」のみ published: true を送る。下書き保存は published を変えない
           input: publish ? { title, content, published: true } : { title, content },
         },
+        refetchQueries: [{ query: GET_POST, variables: { id: Number(id) } }],
+        awaitRefetchQueries: true,
       });
       if (data) navigate(type === 'ACTIVITY' ? `/activities/${id}` : `/blog/${id}`);
     } else {
