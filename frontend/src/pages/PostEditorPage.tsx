@@ -76,7 +76,24 @@ export function PostEditorPage() {
     <Container maxW="800px" py={10}>
       <VStack gap={6} align="stretch">
         <Flex justify="space-between" align={{ base: 'flex-start', md: 'center' }} flexDir={{ base: 'column', md: 'row' }} gap={3}>
-          <HStack gap={3}>
+          <HStack gap={3} align="center">
+            {/* モバイルのみ: テキストリンクで戻る */}
+            <Box
+              as="button"
+              display={{ base: 'block', md: 'none' }}
+              onClick={() => navigate(
+                isEdit
+                  ? (type === 'ACTIVITY' ? `/activities/${id}` : `/blog/${id}`)
+                  : (type === 'ACTIVITY' ? '/activities' : '/blog')
+              )}
+              color="blue.500"
+              fontSize="sm"
+              fontWeight="semibold"
+              flexShrink={0}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+            >
+              ← 戻る
+            </Box>
             <Heading as="h1" size={{ base: 'lg', md: 'xl' }} color="gray.800">
               {isEdit
                 ? type === 'ACTIVITY' ? '活動記録を編集' : '技術記事を編集'
@@ -91,14 +108,15 @@ export function PostEditorPage() {
             </Badge>
           </HStack>
           <HStack gap={3} flexWrap="wrap">
+            {/* デスクトップのみ: ボタンで戻る */}
             {isEdit && (
-              <Button variant="outline" size="sm" onClick={() => navigate(type === 'ACTIVITY' ? `/activities/${id}` : `/blog/${id}`)}>
+              <Button display={{ base: 'none', md: 'flex' }} variant="outline" size="sm" onClick={() => navigate(type === 'ACTIVITY' ? `/activities/${id}` : `/blog/${id}`)}>
                 ← 戻る
               </Button>
             )}
             {!isEdit && (
               <>
-                <Button variant="outline" size="sm" onClick={() => navigate(type === 'ACTIVITY' ? '/activities' : '/blog')}>
+                <Button display={{ base: 'none', md: 'flex' }} variant="outline" size="sm" onClick={() => navigate(type === 'ACTIVITY' ? '/activities' : '/blog')}>
                   ← 戻る
                 </Button>
                 <Button variant="outline" size="sm" onClick={() => setTemplateOpen(true)}>
