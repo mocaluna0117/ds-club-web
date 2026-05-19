@@ -98,6 +98,9 @@ export function PostEditorPage() {
             )}
             {!isEdit && (
               <>
+                <Button variant="outline" size="sm" onClick={() => navigate(type === 'ACTIVITY' ? '/activities' : '/blog')}>
+                  ← 戻る
+                </Button>
                 <Button variant="outline" size="sm" onClick={() => setTemplateOpen(true)}>
                   テンプレート
                 </Button>
