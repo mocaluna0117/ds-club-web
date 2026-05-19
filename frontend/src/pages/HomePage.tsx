@@ -23,7 +23,13 @@ export function HomePage() {
         textAlign="center"
       >
         <VStack gap={5} maxW="640px" mx="auto">
-          <Heading as="h1" size={{ base: '2xl', md: '3xl' }} color="white" fontWeight="extrabold">
+          <Heading
+            as="h1"
+            fontSize={{ base: '5.5vw', md: '3rem' }}
+            color="white"
+            fontWeight="extrabold"
+            whiteSpace="nowrap"
+          >
             データサイエンス倶楽部 へようこそ
           </Heading>
           <HStack gap={3} flexWrap="wrap" justify="center">
