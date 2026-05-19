@@ -51,7 +51,7 @@ function MemberFormFields({ form, onChange }: {
     <VStack gap={4} align="stretch">
       <Field.Root required>
         <Field.Label fontSize="sm">名前</Field.Label>
-        <Input value={form.name} onChange={set('name')} />
+        <Input value={form.name} onChange={set('name')} fontSize="16px" />
       </Field.Root>
       <Field.Root required>
         <Field.Label fontSize="sm">役割</Field.Label>
@@ -67,15 +67,15 @@ function MemberFormFields({ form, onChange }: {
       </Field.Root>
       <Field.Root>
         <Field.Label fontSize="sm">自己紹介</Field.Label>
-        <Textarea value={form.bio} onChange={set('bio')} h="80px" resize="none" />
+        <Textarea value={form.bio} onChange={set('bio')} h="80px" resize="none" fontSize="16px" />
       </Field.Root>
       <Field.Root>
         <Field.Label fontSize="sm">GitHub ユーザー名</Field.Label>
-        <Input value={form.github} onChange={set('github')} placeholder="username" />
+        <Input value={form.github} onChange={set('github')} placeholder="username" fontSize="16px" />
       </Field.Root>
       <Field.Root>
         <Field.Label fontSize="sm">X ユーザー名</Field.Label>
-        <Input value={form.twitter} onChange={set('twitter')} placeholder="username" />
+        <Input value={form.twitter} onChange={set('twitter')} placeholder="username" fontSize="16px" />
       </Field.Root>
     </VStack>
   );
