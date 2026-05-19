@@ -90,7 +90,7 @@ export function PostEditorPage() {
               {type === 'ACTIVITY' ? '活動記録' : '技術記事'}
             </Badge>
           </HStack>
-          <HStack gap={3}>
+          <HStack gap={3} flexWrap="wrap">
             {isEdit && (
               <Button variant="outline" size="sm" onClick={() => navigate(type === 'ACTIVITY' ? `/activities/${id}` : `/blog/${id}`)}>
                 ← 戻る
