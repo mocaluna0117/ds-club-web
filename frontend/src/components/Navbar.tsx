@@ -19,22 +19,38 @@ export function Navbar() {
   return (
     <Box as="nav" bg="white" borderBottom="1px solid" borderColor="gray.200" position="sticky" top={0} zIndex={100}>
       {/* メインバー */}
-      <Flex px={{ base: 4, md: 8 }} py={3} align="center" justify="space-between">
-        {/* ロゴ */}
+      <Flex px={{ base: 4, md: 8 }} py={3} align="center" justify="space-between" position="relative">
+        {/* ロゴ（アイコン + デスクトップのみテキスト） */}
         <RouterLink
           to="/"
           onClick={closeMenu}
-          style={{ textDecoration: 'none', flexShrink: 0, display: 'flex', alignItems: 'center', gap: '8px' }}
+          style={{ textDecoration: 'none', flexShrink: 0, display: 'flex', alignItems: 'center', gap: '8px', zIndex: 1 }}
         >
           <img
             src={`${import.meta.env.BASE_URL}ds_club_icon.png`}
             alt="データサイエンス倶楽部"
             style={{ height: '52px', objectFit: 'contain' }}
           />
-          <span style={{ fontSize: '1rem', fontWeight: '800', color: '#2563eb', whiteSpace: 'nowrap' }}>
+          {/* デスクトップのみテキストをロゴの横に表示 */}
+          <Box display={{ base: 'none', md: 'block' }}>
+            <span style={{ fontSize: '1rem', fontWeight: '800', color: '#2563eb', whiteSpace: 'nowrap' }}>
+              データサイエンス倶楽部
+            </span>
+          </Box>
+        </RouterLink>
+
+        {/* モバイルのみ: テキストを中央に絶対配置 */}
+        <Box
+          display={{ base: 'block', md: 'none' }}
+          position="absolute"
+          left="50%"
+          style={{ transform: 'translateX(-50%)' }}
+          pointerEvents="none"
+        >
+          <span style={{ fontSize: '0.95rem', fontWeight: '800', color: '#2563eb', whiteSpace: 'nowrap' }}>
             データサイエンス倶楽部
           </span>
-        </RouterLink>
+        </Box>
 
         {/* デスクトップナビ */}
         <HStack gap={4} align="center" display={{ base: 'none', md: 'flex' }}>
