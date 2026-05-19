@@ -45,11 +45,12 @@ export function Navbar() {
           position="absolute"
           left="50%"
           style={{ transform: 'translateX(-50%)' }}
-          pointerEvents="none"
         >
-          <span style={{ fontSize: '0.95rem', fontWeight: '800', color: '#2563eb', whiteSpace: 'nowrap' }}>
-            データサイエンス倶楽部
-          </span>
+          <RouterLink to="/" onClick={closeMenu} style={{ textDecoration: 'none' }}>
+            <span style={{ fontSize: '1.05rem', fontWeight: '800', color: '#2563eb', whiteSpace: 'nowrap' }}>
+              データサイエンス倶楽部
+            </span>
+          </RouterLink>
         </Box>
 
         {/* デスクトップナビ */}
