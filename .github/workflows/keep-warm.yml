@@ -1,0 +1,34 @@
+name: Keep Backend Warm
+
+# Render 無料プランは15分アクセスがないとスリープし、復帰に約40秒かかる。
+# 定期的に軽い GraphQL クエリ ({ __typename }) を投げてスリープを防ぐ。
+#
+# 重要: クエリは __typename のみ。DB(Neon) には触らないため、Neon は通常どおり
+# 5分で眠れる → Neon の無料枠 (100 CU時間/月) を消費しない。
+# Render だけを起こし続け、Neon は寝かせる設計。
+#
+# 間隔は10分。GitHub の cron は混雑時に数分遅延することがあるため、
+# Render の15分スリープに対して余裕を持たせている。
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:  # Actions タブから手動実行も可能
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping backend (DB に触らない __typename クエリ)
+        env:
+          API_URL: ${{ secrets.VITE_API_URL }}
+        run: |
+          curl -sf \
+            --max-time 90 \
+            --retry 2 \
+            --retry-delay 5 \
+            --retry-all-errors \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -d '{"query":"{ __typename }"}' \
+            "$API_URL"
