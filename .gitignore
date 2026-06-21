@@ -9,3 +9,4 @@ frontend/dist/
 backend/prisma/seed.js
 backend/prisma/seed.js.map
 backend/prisma/seed.d.ts
+*.pdf
