@@ -3,15 +3,50 @@ import { Link as RouterLink } from 'react-router-dom';
 
 const BASE = import.meta.env.BASE_URL;
 
-const FEATURES = [
-  { icon: `${BASE}python_icon.png`, title: 'Pythonの学習', desc: 'Pythonの基礎からPandas, Numpy, Scikit-learnなどを勉強会を通じて学習' },
-  { icon: `${BASE}data_analysis.png`, title: 'データ分析の学習', desc: '簡単なデータを使用しデータ分析の基礎を学習' },
-  { icon: `${BASE}compe.png`, title: 'データ分析コンペへの参加', desc: 'KaggleやSignateなどのデータ分析コンペにチームで参加' },
+type Feature = {
+  icon: string;
+  title: string;
+  desc: string;
+  /** 内部ページへ遷移（カード全体がクリック可能） */
+  to?: string;
+  /** 外部サイトへ遷移（カード全体がクリック可能・新規タブ） */
+  href?: string;
+  /** カード下部に表示する誘導テキスト */
+  linkLabel?: string;
+  /** 遷移先が複数ある場合（カード自体ではなく個別リンクをクリック） */
+  links?: { label: string; href: string }[];
+};
+
+const FEATURES: Feature[] = [
+  {
+    icon: `${BASE}python_icon.png`,
+    title: 'Pythonの学習',
+    desc: 'Pythonの基礎からPandas, Numpy, Scikit-learnなどを勉強会を通じて学習',
+    to: '/activities',
+    linkLabel: '活動記録を見る →',
+  },
+  {
+    icon: `${BASE}data_analysis.png`,
+    title: 'データ分析の学習',
+    desc: '簡単なデータを使用しデータ分析の基礎を学習',
+    to: '/blog',
+    linkLabel: '技術記事を見る →',
+  },
+  {
+    icon: `${BASE}compe.png`,
+    title: 'データ分析コンペへの参加',
+    desc: 'KaggleやSignateなどのデータ分析コンペにチームで参加',
+    links: [
+      { label: 'Kaggle →', href: 'https://www.kaggle.com/' },
+      { label: 'SIGNATE →', href: 'https://signate.jp/' },
+    ],
+  },
   {
     icon: `${BASE}paiza_atcoder.png`,
     title: '競技プログラミング',
     desc: 'AtCoderやPaizaなどの競技プログラミングのコンテストに参加',
-    link: { href: 'https://r1ku169.github.io/shojin-dashboard/#/', label: '精進ボードを見る →' },
+    href: 'https://r1ku169.github.io/shojin-dashboard/#/',
+    linkLabel: '精進ボードを見る →',
   },
 ];
 
@@ -74,41 +109,78 @@ export function HomePage() {
           </Heading>
           <SimpleGrid columns={{ base: 1, md: 2 }} gap={6}>
             {FEATURES.map((f) => (
-              <Box
-                key={f.title}
-                bg="gray.50"
-                borderRadius="2xl"
-                border="1px solid"
-                borderColor="gray.200"
-                display="flex"
-                alignItems="stretch"
-                overflow="hidden"
-              >
-                <Box display="flex" alignItems="center" justifyContent="center" bg="white" flexShrink={0} w={{ base: '100px', md: '140px' }}>
-                  <img src={f.icon} alt={f.title} style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '12px' }} />
-                </Box>
-                <Box textAlign="left" p={{ base: 4, md: 6 }} display="flex" flexDirection="column" justifyContent="center">
-                  <Heading as="h3" size="md" mb={2} color="gray.800">{f.title}</Heading>
-                  <Text color="gray.500" fontSize={{ base: 'sm', md: 'md' }} lineHeight="tall">{f.desc}</Text>
-                  {f.link && (
-                    <Link
-                      href={f.link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      color="blue.500"
-                      fontWeight="bold"
-                      fontSize={{ base: 'sm', md: 'md' }}
-                      mt={2}
-                    >
-                      {f.link.label}
-                    </Link>
-                  )}
-                </Box>
-              </Box>
+              <FeatureCard key={f.title} feature={f} />
             ))}
           </SimpleGrid>
         </Container>
       </Box>
     </Box>
   );
+}
+
+function FeatureCard({ feature: f }: { feature: Feature }) {
+  const clickable = !!(f.to || f.href);
+  const card = (
+    <Box
+      bg="gray.50"
+      borderRadius="2xl"
+      border="1px solid"
+      borderColor="gray.200"
+      display="flex"
+      alignItems="stretch"
+      overflow="hidden"
+      h="100%"
+      transition="all 0.2s"
+      {...(clickable && {
+        cursor: 'pointer',
+        _hover: { borderColor: 'blue.300', boxShadow: 'md', transform: 'translateY(-2px)' },
+      })}
+    >
+      <Box display="flex" alignItems="center" justifyContent="center" bg="white" flexShrink={0} w={{ base: '100px', md: '140px' }}>
+        <img src={f.icon} alt={f.title} style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '12px' }} />
+      </Box>
+      <Box textAlign="left" p={{ base: 4, md: 6 }} display="flex" flexDirection="column" justifyContent="center">
+        <Heading as="h3" size="md" mb={2} color="gray.800">{f.title}</Heading>
+        <Text color="gray.500" fontSize={{ base: 'sm', md: 'md' }} lineHeight="tall">{f.desc}</Text>
+        {f.linkLabel && (
+          <Text color="blue.500" fontWeight="bold" fontSize={{ base: 'sm', md: 'md' }} mt={2}>
+            {f.linkLabel}
+          </Text>
+        )}
+        {f.links && (
+          <HStack gap={4} mt={2} flexWrap="wrap">
+            {f.links.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                color="blue.500"
+                fontWeight="bold"
+                fontSize={{ base: 'sm', md: 'md' }}
+              >
+                {l.label}
+              </Link>
+            ))}
+          </HStack>
+        )}
+      </Box>
+    </Box>
+  );
+
+  if (f.to) {
+    return (
+      <RouterLink to={f.to} style={{ textDecoration: 'none', display: 'block' }}>
+        {card}
+      </RouterLink>
+    );
+  }
+  if (f.href) {
+    return (
+      <a href={f.href} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', display: 'block' }}>
+        {card}
+      </a>
+    );
+  }
+  return card;
 }
