@@ -7,21 +7,6 @@ type AuthPayload {
   adminName: String!
 }
 
-type Contact {
-  createdAt: DateTime!
-  email: String!
-  id: Int!
-  message: String!
-  name: String!
-  read: Boolean!
-}
-
-input CreateContactInput {
-  email: String!
-  message: String!
-  name: String!
-}
-
 input CreateMemberInput {
   bio: String
   github: String
@@ -75,11 +60,9 @@ type Mutation {
   createPost(input: CreatePostInput!): Post!
   createTemplate(input: CreateTemplateInput!): Template!
   login(input: LoginInput!): AuthPayload!
-  markContactRead(id: Int!): Contact!
   removeMember(id: Int!): Member!
   removePost(id: Int!): Post!
   removeTemplate(id: Int!): Template!
-  sendContact(input: CreateContactInput!): Contact!
   updateMember(id: Int!, input: UpdateMemberInput!): Member!
   updatePost(id: Int!, input: UpdatePostInput!): Post!
 }
@@ -110,7 +93,6 @@ enum PostType {
 type Query {
   activities: [Post!]!
   allPosts: [Post!]!
-  contacts: [Contact!]!
   member(id: Int!): Member!
   members: [Member!]!
   post(id: Int!): Post!

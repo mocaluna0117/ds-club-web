@@ -7,7 +7,6 @@ import { PrismaModule } from './prisma/prisma.module';
 import { MembersModule } from './members/members.module';
 import { PostsModule } from './posts/posts.module';
 import { AuthModule } from './auth/auth.module';
-import { ContactModule } from './contact/contact.module';
 import { TemplatesModule } from './templates/templates.module';
 
 @Module({
@@ -23,7 +22,6 @@ import { TemplatesModule } from './templates/templates.module';
     MembersModule,
     PostsModule,
     AuthModule,
-    ContactModule,
     TemplatesModule,
   ],
 })

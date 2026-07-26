@@ -1,6 +1,6 @@
 # DS Club Web
 
-DS倶楽部の公式Webサイト。メンバー紹介・活動ブログ・お問い合わせ機能を備えたフルスタックWebアプリ。
+DS倶楽部の公式Webサイト。メンバー紹介・活動ブログ機能を備えたフルスタックWebアプリ。
 
 ## 構成
 
@@ -28,8 +28,7 @@ ds_club_web/
 
 - **メンバー紹介** — 部員のプロフィール一覧 (学年・役職・GitHub/Twitter リンク)
 - **ブログ/活動記録** — 記事の投稿・閲覧
-- **お問い合わせ** — 外部からのフォーム送信 (DBに保存)
-- **管理者ログイン** — JWT認証によるコンテンツ管理 (メンバー・記事・問い合わせの管理)
+- **管理者ログイン** — JWT認証によるコンテンツ管理 (メンバー・記事の管理)
 
 ## ローカル開発のセットアップ
 
@@ -211,12 +210,12 @@ dist/ を GitHub Pages にアップロード
 ```
 backend/
 ├── prisma/
-│   └── schema.prisma        # Member / Post / Contact / Admin モデル
+│   └── schema.prisma        # Member / Post / Template / Admin モデル
 ├── src/
 │   ├── members/             # メンバー Query / Mutation
 │   ├── posts/               # ブログ記事 Query / Mutation
 │   ├── auth/                # JWT認証・ログイン
-│   ├── contact/             # お問い合わせ
+│   ├── templates/           # 記事テンプレート Query / Mutation
 │   └── prisma/              # PrismaService (Global Module)
 └── render.yaml              # Render デプロイ設定
 
@@ -231,7 +230,7 @@ frontend/
         ├── MembersPage.tsx
         ├── BlogPage.tsx
         ├── BlogPostPage.tsx
-        ├── ContactPage.tsx
+        ├── ActivityPage.tsx
         ├── LoginPage.tsx    # 管理者ログイン
         └── AdminPage.tsx    # 管理者ダッシュボード
 ```

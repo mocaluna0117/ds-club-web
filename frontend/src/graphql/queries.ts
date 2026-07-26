@@ -111,14 +111,6 @@ export const LOGIN = graphql(`
   }
 `);
 
-export const SEND_CONTACT = graphql(`
-  mutation SendContact($input: CreateContactInput!) {
-    sendContact(input: $input) {
-      id
-    }
-  }
-`);
-
 export const GET_ALL_POSTS_ADMIN = graphql(`
   query GetAllPostsAdmin {
     allPosts {
@@ -144,29 +136,6 @@ export const UPDATE_POST = graphql(`
     }
   }
 `);
-
-export const GET_CONTACTS = graphql(`
-  query GetContacts {
-    contacts {
-      id
-      name
-      email
-      message
-      read
-      createdAt
-    }
-  }
-`);
-
-export const MARK_CONTACT_READ = graphql(`
-  mutation MarkContactRead($id: Int!) {
-    markContactRead(id: $id) {
-      id
-      read
-    }
-  }
-`);
-
 
 export const GET_TEMPLATES = graphql(`
   query GetTemplates($type: PostType) {

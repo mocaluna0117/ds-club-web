@@ -9,7 +9,6 @@ import { HomePage } from './pages/HomePage';
 import { MembersPage } from './pages/MembersPage';
 import { BlogPage } from './pages/BlogPage';
 import { BlogPostPage } from './pages/BlogPostPage';
-import { ContactPage } from './pages/ContactPage';
 import { LoginPage } from './pages/LoginPage';
 import { AdminPage } from './pages/AdminPage';
 import { ActivityPage } from './pages/ActivityPage';
@@ -30,7 +29,6 @@ function App() {
                 <Route path="/activities" element={<ActivityPage />} />
                 <Route path="/blog/:id" element={<BlogPostPage />} />
                 <Route path="/activities/:id" element={<BlogPostPage />} />
-                <Route path="/contact" element={<ContactPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/admin" element={<AdminPage />} />
                 <Route path="/admin/new-post" element={<PostEditorPage />} />

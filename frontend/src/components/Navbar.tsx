@@ -8,7 +8,6 @@ const NAV_LINKS = [
   { to: '/members', label: 'メンバー' },
   { to: '/blog', label: '技術記事' },
   { to: '/activities', label: '活動記録' },
-  { to: '/contact', label: 'お問い合わせ' },
 ];
 
 export function Navbar() {

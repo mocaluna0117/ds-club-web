@@ -34,7 +34,7 @@
 | **開発メンバー数・構成** | 1名（企画・設計・フロントエンド・バックエンド・インフラ・運用すべてを担当） |
 | **自身の担当範囲** | **全工程**。要件定義、画面設計、フロント実装、API/DB設計・実装、認証、デプロイ、CI構築、運用改善まで100%自分で実施 |
 | **動作環境** | モダンブラウザ（Chrome / Edge / Safari / Firefox の最新版）。PC・スマートフォン両対応のレスポンシブUI。サーバはクラウド上で稼働しており、上記URLからインストール不要で閲覧可能 |
-| **操作方法** | ブラウザで公開URLにアクセスする。一般利用者はメンバー紹介・ブログ・活動記録・お問い合わせを閲覧/利用できる。記事の作成・編集は管理者ログイン後の管理画面からのみ可能（後述） |
+| **操作方法** | ブラウザで公開URLにアクセスする。一般利用者はメンバー紹介・ブログ・活動記録を閲覧できる。記事の作成・編集は管理者ログイン後の管理画面からのみ可能（後述） |
 
 ---
 
@@ -48,7 +48,6 @@
 | バックエンド | NestJS 11, TypeScript, **GraphQL（code-first）**, Apollo Server v5 |
 | DB / ORM | PostgreSQL, Prisma |
 | 認証 | JWT + Passport（passport-jwt）, bcrypt |
-| メール送信 | Nodemailer（お問い合わせフォーム） |
 | インフラ | フロント: GitHub Pages ／ API: Render ／ DB: Neon（いずれも無料枠） |
 | CI/CD・運用 | GitHub Actions（push時の自動デプロイ）／ cron-job.org（APIの死活監視・keep-warm） |
 
@@ -80,7 +79,6 @@
 - **ブログ / 活動記録** … 記事の一覧・詳細表示（2種類の投稿タイプを区別）
 - **管理者用 記事エディタ** … 後述の自作リッチテキストエディタで記事を作成・編集・テンプレート適用
 - **管理者認証** … JWTによるログイン。**編集系の操作は管理者のみに制限**
-- **お問い合わせフォーム** … 入力内容をサーバ経由でメール送信（Nodemailer）
 - **レスポンシブ対応** … スマホ閲覧時のナビゲーション挙動やフォーム入力（iOSの自動ズーム抑止など）まで個別調整
 
 ---
@@ -155,7 +153,7 @@
 ### 公開サイトで確認する
 
 1. https://mocaluna0117.github.io/ds-club-web にアクセス
-2. メンバー紹介・ブログ・活動記録・お問い合わせを閲覧/操作
+2. メンバー紹介・ブログ・活動記録を閲覧/操作
    - ※APIが起動していれば1秒以内に表示される（keep-warm運用中）
 
 ### ローカルで動かす場合
@@ -181,14 +179,14 @@ cd frontend && npm install && npm run dev
 ds_club_web/
 ├── frontend/                 # React + TypeScript + Vite
 │   └── src/
-│       ├── pages/            # 9画面（Home/Members/Blog/Activity/Contact/Admin 等）
+│       ├── pages/            # 8画面（Home/Members/Blog/Activity/Admin 等）
 │       ├── components/editor # 自作リッチテキストエディタ（TipTap拡張）
 │       ├── graphql/          # GraphQLクエリ定義
 │       ├── __generated__/    # codegenが生成する型（手書きしない）
 │       └── lib/apolloClient.ts
 ├── backend/                  # NestJS + GraphQL(code-first) + Prisma
 │   └── src/
-│       ├── members/ posts/ contact/ templates/  # 機能別モジュール
+│       ├── members/ posts/ templates/  # 機能別モジュール
 │       ├── auth/             # JWT認証・ガード
 │       └── prisma/
 └── .github/workflows/        # push時の自動デプロイ（GitHub Pages）

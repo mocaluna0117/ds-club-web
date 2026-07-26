@@ -7,8 +7,8 @@ import {
 } from '@chakra-ui/react';
 import { useAuth } from '../context/AuthContext';
 import {
-  GET_ALL_POSTS_ADMIN, GET_CONTACTS, GET_MEMBERS,
-  REMOVE_POST, UPDATE_POST, MARK_CONTACT_READ,
+  GET_ALL_POSTS_ADMIN, GET_MEMBERS,
+  REMOVE_POST, UPDATE_POST,
 } from '../graphql/queries';
 
 export function AdminPage() {
@@ -16,8 +16,6 @@ export function AdminPage() {
 
   const { data: postsData, loading: postsLoading, refetch: refetchPosts } =
     useQuery(GET_ALL_POSTS_ADMIN, { fetchPolicy: 'cache-and-network', skip: !token });
-  const { data: contactsData, loading: contactsLoading, refetch: refetchContacts } =
-    useQuery(GET_CONTACTS, { fetchPolicy: 'cache-and-network', skip: !token });
   const { data: membersData } =
     useQuery(GET_MEMBERS, { skip: !token });
 
@@ -29,16 +27,10 @@ export function AdminPage() {
   const [updatePost] = useMutation(UPDATE_POST, {
     onCompleted: () => void refetchPosts(),
   });
-  const [markRead] = useMutation(MARK_CONTACT_READ, {
-    onCompleted: () => void refetchContacts(),
-  });
-
   if (!token) return <Navigate to="/login" replace />;
 
   const allPosts = postsData?.allPosts ?? [];
-  const contacts = contactsData?.contacts ?? [];
   const members = membersData?.members ?? [];
-  const unreadCount = contacts.filter((c) => !c.read).length;
   const blogPosts = allPosts.filter((p) => p.type === 'BLOG');
   const activityPosts = allPosts.filter((p) => p.type === 'ACTIVITY');
 
@@ -53,10 +45,9 @@ export function AdminPage() {
       </Flex>
 
       {/* 統計カード */}
-      <SimpleGrid columns={{ base: 2, md: 4 }} gap={4} mb={10}>
+      <SimpleGrid columns={{ base: 1, sm: 3 }} gap={4} mb={10}>
         <StatCard label="記事数" value={allPosts.length} color="blue" />
         <StatCard label="メンバー数" value={members.length} color="teal" />
-        <StatCard label="未読問い合わせ" value={unreadCount} color={unreadCount > 0 ? 'orange' : 'gray'} />
         <StatCard label="下書き" value={allPosts.filter((p) => !p.published).length} color="purple" />
       </SimpleGrid>
 
@@ -100,48 +91,6 @@ export function AdminPage() {
         </Button>
       }>
         <Text color="gray.500" fontSize="sm">現在 {members.length} 名が登録されています。メンバーの追加・編集・削除はメンバーページから行えます。</Text>
-      </SectionCard>
-
-      {/* お問い合わせ */}
-      <SectionCard title={`お問い合わせ${unreadCount > 0 ? `（未読 ${unreadCount}件）` : ''}`}>
-        {contactsLoading ? (
-          <Center py={6}><Spinner size="sm" /></Center>
-        ) : contacts.length === 0 ? (
-          <Text color="gray.400" fontSize="sm">お問い合わせはまだありません</Text>
-        ) : (
-          <VStack gap={3} align="stretch">
-            {contacts.map((c) => (
-              <Box
-                key={c.id}
-                border="1px solid"
-                borderColor={c.read ? 'gray.200' : 'orange.300'}
-                borderRadius="lg"
-                p={4}
-                bg={c.read ? 'white' : 'orange.50'}
-              >
-                <Flex justify="space-between" align="start">
-                  <Box>
-                    <HStack gap={2} mb={1}>
-                      {!c.read && <Badge colorPalette="orange" size="sm">未読</Badge>}
-                      <Text fontWeight="bold" fontSize="sm">{c.name}</Text>
-                      <Text color="gray.400" fontSize="xs">{c.email}</Text>
-                    </HStack>
-                    <Text fontSize="sm" color="gray.600" whiteSpace="pre-wrap">{c.message}</Text>
-                    <Text fontSize="xs" color="gray.400" mt={1}>
-                      {new Date(c.createdAt).toLocaleDateString('ja-JP')}
-                    </Text>
-                  </Box>
-                  {!c.read && (
-                    <Button size="xs" variant="outline" flexShrink={0}
-                      onClick={() => void markRead({ variables: { id: c.id } })}>
-                      既読にする
-                    </Button>
-                  )}
-                </Flex>
-              </Box>
-            ))}
-          </VStack>
-        )}
       </SectionCard>
 
       {/* 削除確認ダイアログ */}
