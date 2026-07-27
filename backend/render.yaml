@@ -13,5 +13,7 @@ services:
         value: 7d
       - key: FRONTEND_URL
         sync: false
+      - key: GITHUB_REBUILD_TOKEN # コンテンツ更新時にフロント再ビルドを起動するPAT (任意)
+        sync: false
       - key: PORT
         value: 3001

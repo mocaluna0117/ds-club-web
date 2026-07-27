@@ -83,7 +83,7 @@ function MemberFormFields({ form, onChange }: {
 
 export function MembersPage() {
   const { token } = useAuth();
-  const { data, loading, error } = useQuery(GET_MEMBERS);
+  const { data, loading, error } = useQuery(GET_MEMBERS, { fetchPolicy: 'cache-and-network' });
 
   const [createMember, { loading: creating, error: createError }] = useMutation(CREATE_MEMBER, {
     refetchQueries: [GET_MEMBERS],
@@ -139,8 +139,8 @@ export function MembersPage() {
     setEditTarget(null);
   };
 
-  if (loading) return <Center py={20}><Spinner size="xl" color="blue.500" /></Center>;
-  if (error) return <Center py={20}><Text color="gray.500">エラーが発生しました。</Text></Center>;
+  if (loading && !data) return <Center py={20}><Spinner size="xl" color="blue.500" /></Center>;
+  if (error && !data) return <Center py={20}><Text color="gray.500">エラーが発生しました。</Text></Center>;
 
   return (
     <Container as="main" maxW="960px" py={12}>

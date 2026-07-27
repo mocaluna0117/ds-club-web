@@ -9,6 +9,8 @@ async function bootstrap() {
     credentials: true,
   });
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  // SIGTERM時に OnApplicationShutdown を呼ばせる (RebuildService がデバウンス待ちの通知を送りきるため)
+  app.enableShutdownHooks();
   await app.listen(process.env.PORT ?? 3001);
 }
 bootstrap();

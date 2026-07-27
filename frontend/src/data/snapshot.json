@@ -1,0 +1,61 @@
+{
+  "generatedAt": "2026-07-27T08:28:35.226Z",
+  "members": [],
+  "posts": [],
+  "activities": [
+    {
+      "__typename": "Post",
+      "id": 2,
+      "title": "2026/05/19(金)",
+      "excerpt": null,
+      "coverImage": null,
+      "createdAt": "2026-05-19T15:58:11.522Z",
+      "author": {
+        "__typename": "PostAuthor",
+        "name": "木村大暉"
+      }
+    },
+    {
+      "__typename": "Post",
+      "id": 1,
+      "title": "2026/05/15(金)",
+      "excerpt": null,
+      "coverImage": null,
+      "createdAt": "2026-05-17T12:53:56.378Z",
+      "author": {
+        "__typename": "PostAuthor",
+        "name": "木村大暉"
+      }
+    }
+  ],
+  "postDetails": [
+    {
+      "__typename": "Post",
+      "id": 2,
+      "title": "2026/05/19(金)",
+      "content": "<h1>場所</h1><p>Y202</p><h1>時間</h1><p>16:15〜19:00</p><h1>参加者</h1><p>・代表</p><p>・運営1</p><p>・運営2</p><p>・3年生1人</p><p>・2年生1人</p><p>・1年生1人</p><h1>内容</h1><p>・参加した1年生のプラグラミング力が高いため、AtCoderをやった！</p><p></p><p></p>",
+      "type": "ACTIVITY",
+      "coverImage": null,
+      "createdAt": "2026-05-19T15:58:11.522Z",
+      "updatedAt": "2026-05-19T15:58:11.522Z",
+      "author": {
+        "__typename": "PostAuthor",
+        "name": "木村大暉"
+      }
+    },
+    {
+      "__typename": "Post",
+      "id": 1,
+      "title": "2026/05/15(金)",
+      "content": "<h1>場所</h1><p>Y202</p><h1>時間</h1><p>16:15〜19:00</p><h1>参加者</h1><p>・代表</p><p>・運営1</p><p>・運営2</p><p>・4年生1人</p><p>・2年生2人</p><p>・1年生3人</p><h1>内容</h1><p>・Python基礎</p><p>・Pandas基礎（Python基礎が終わった人）</p><p></p><p></p>",
+      "type": "ACTIVITY",
+      "coverImage": null,
+      "createdAt": "2026-05-17T12:53:56.378Z",
+      "updatedAt": "2026-05-17T12:53:56.378Z",
+      "author": {
+        "__typename": "PostAuthor",
+        "name": "木村大暉"
+      }
+    }
+  ]
+}

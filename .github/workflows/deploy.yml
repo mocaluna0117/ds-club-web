@@ -6,11 +6,18 @@ on:
     paths:
       - 'frontend/**'  # frontend/ 以下のファイルが変更されたときだけ自動デプロイ
 
-  # workflow_dispatch:
-  # GitHub の Actions タブから手動でデプロイを実行したい場合に有効化する。
-  # 例: frontend/ 以外のファイルしか変えていないのに再デプロイしたいとき、
-  #     環境変数 (VITE_API_URL) を変更した後に反映させたいとき。
-  # 有効にするには上の行のコメントアウト (#) を外すだけでよい。
+  # 管理画面でコンテンツ(メンバー・記事)を更新したときにバックエンドが発火する。
+  # 公開データのスナップショットを焼き直すために再ビルドする。
+  repository_dispatch:
+    types: [content-updated]
+
+  # スナップショットが古くなりすぎないよう毎日1回再ビルド (21:00 UTC = 6:00 JST)
+  schedule:
+    - cron: '0 21 * * *'
+
+  # GitHub の Actions タブから手動でデプロイを実行できる。
+  # 例: 環境変数 (VITE_API_URL) を変更した後に反映させたいとき。
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -37,6 +44,15 @@ jobs:
       - name: Install dependencies
         working-directory: frontend
         run: npm ci
+
+      # 公開データ(メンバー・記事・活動記録)をAPIから取得してバンドルに焼き込む。
+      # 訪問者はAPIのコールドスタートを待たずに即時表示される。
+      # APIが寝ていても起きるまでリトライし、失敗してもビルドは継続する(コミット済みのスナップショットを使用)。
+      - name: Generate content snapshot
+        working-directory: frontend
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+        run: node scripts/generate-snapshot.mjs
 
       - name: Build
         working-directory: frontend

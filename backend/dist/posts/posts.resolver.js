@@ -20,10 +20,13 @@ const posts_service_1 = require("./posts.service");
 const post_model_1 = require("./post.model");
 const post_input_1 = require("./post.input");
 const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
+const rebuild_service_1 = require("../rebuild/rebuild.service");
 let PostsResolver = class PostsResolver {
     postsService;
-    constructor(postsService) {
+    rebuildService;
+    constructor(postsService, rebuildService) {
         this.postsService = postsService;
+        this.rebuildService = rebuildService;
     }
     findBlogs() {
         return this.postsService.findAll(true, client_1.PostType.BLOG);
@@ -37,14 +40,20 @@ let PostsResolver = class PostsResolver {
     findOne(id) {
         return this.postsService.findOne(id);
     }
-    createPost(input, ctx) {
-        return this.postsService.create(input, ctx.req.user.id);
+    async createPost(input, ctx) {
+        const post = await this.postsService.create(input, ctx.req.user.id);
+        this.rebuildService.trigger();
+        return post;
     }
-    updatePost(id, input) {
-        return this.postsService.update(id, input);
+    async updatePost(id, input) {
+        const post = await this.postsService.update(id, input);
+        this.rebuildService.trigger();
+        return post;
     }
-    removePost(id) {
-        return this.postsService.remove(id);
+    async removePost(id) {
+        const post = await this.postsService.remove(id);
+        this.rebuildService.trigger();
+        return post;
     }
 };
 exports.PostsResolver = PostsResolver;
@@ -81,7 +90,7 @@ __decorate([
     __param(1, (0, graphql_1.Context)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [post_input_1.CreatePostInput, Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], PostsResolver.prototype, "createPost", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
@@ -90,7 +99,7 @@ __decorate([
     __param(1, (0, graphql_1.Args)('input')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, post_input_1.UpdatePostInput]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], PostsResolver.prototype, "updatePost", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
@@ -98,10 +107,11 @@ __decorate([
     __param(0, (0, graphql_1.Args)('id', { type: () => graphql_1.Int })),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], PostsResolver.prototype, "removePost", null);
 exports.PostsResolver = PostsResolver = __decorate([
     (0, graphql_1.Resolver)(() => post_model_1.Post),
-    __metadata("design:paramtypes", [posts_service_1.PostsService])
+    __metadata("design:paramtypes", [posts_service_1.PostsService,
+        rebuild_service_1.RebuildService])
 ], PostsResolver);
 //# sourceMappingURL=posts.resolver.js.map

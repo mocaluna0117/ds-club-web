@@ -48,7 +48,7 @@ type Props = {
 };
 
 export function RichTextEditor({ content, onChange }: Props) {
-  const { data: membersData } = useQuery(GET_MEMBERS);
+  const { data: membersData } = useQuery(GET_MEMBERS, { fetchPolicy: 'cache-and-network' });
   const membersRef = useRef<MentionItem[]>([]);
 
   useEffect(() => {

@@ -185,6 +185,18 @@ NestJS (npm run start:dev)         NestJS on Render
 
 5. `main` ブランチへのプッシュで自動デプロイ ([.github/workflows/deploy.yml](.github/workflows/deploy.yml) 参照)
 
+### 公開データのスナップショット (コールドスタート対策)
+
+公開ページ (メンバー・技術記事・活動記録) は、ビルド時に [frontend/scripts/generate-snapshot.mjs](frontend/scripts/generate-snapshot.mjs) が API から取得して `frontend/src/data/snapshot.json` に焼き込んだデータを初期表示に使い、表示後にバックグラウンドで最新データへ差し替えます (`fetchPolicy: 'cache-and-network'`)。これにより Render / Neon のコールドスタートが訪問者の体感速度に影響しません。
+
+スナップショットは以下のタイミングで再生成 (=再デプロイ) されます:
+
+- `frontend/` 変更を main に push したとき
+- 毎日 6:00 JST (schedule)
+- 管理画面でメンバー・記事を更新したとき — バックエンドが `repository_dispatch` を送信 (要 `GITHUB_REBUILD_TOKEN`)
+
+管理画面更新時の自動再ビルドを有効にするには、GitHub の **Fine-grained PAT** (対象: このリポジトリのみ / Repository permissions > Contents: **Read and write**) を作成し、Render の環境変数 `GITHUB_REBUILD_TOKEN` に設定します。未設定の場合も日次再ビルドと閲覧時のバックグラウンド更新で内容は反映されます。
+
 ### GitHub Pages の自動更新について
 
 `main` ブランチに push すると GitHub Actions が起動し、サイトが自動更新されます。
@@ -201,9 +213,9 @@ dist/ を GitHub Pages にアップロード
 サイトが更新される (数十秒〜1分程度)
 ```
 
-**ただし `frontend/` 以下のファイルが変わったときだけ** Actions が起動します。`backend/` や `README.md` だけの変更では Actions は動かないため、不要なデプロイが走りません。
+push によるデプロイは **`frontend/` 以下のファイルが変わったときだけ** 起動します (`backend/` や `README.md` だけの変更では走りません)。それに加えて、上記スナップショットの再生成のために日次スケジュールとコンテンツ更新時の `repository_dispatch` でも起動します。
 
-手動でデプロイしたい場合 (環境変数を変えた後など) は、[.github/workflows/deploy.yml](.github/workflows/deploy.yml) 内の `workflow_dispatch:` のコメントアウトを外すと、GitHub の Actions タブから手動実行できるようになります。
+手動でデプロイしたい場合 (環境変数を変えた後など) は、`workflow_dispatch` が有効になっているため GitHub の Actions タブからいつでも手動実行できます。
 
 ## ディレクトリ構造
 

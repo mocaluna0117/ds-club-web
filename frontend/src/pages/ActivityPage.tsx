@@ -26,11 +26,12 @@ export function ActivityPage() {
   });
 
   const loading = token ? adminLoading : publicLoading;
+  const data = token ? adminData : publicData;
   const posts = token
     ? (adminData?.allPosts ?? []).filter((p) => p.type === 'ACTIVITY')
     : (publicData?.activities ?? []);
 
-  if (loading) return <Center py={20}><Spinner size="xl" color="blue.500" /></Center>;
+  if (loading && !data) return <Center py={20}><Spinner size="xl" color="blue.500" /></Center>;
 
   return (
     <Container as="main" maxW="800px" py={12}>

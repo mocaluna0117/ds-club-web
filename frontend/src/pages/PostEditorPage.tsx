@@ -25,6 +25,9 @@ export function PostEditorPage() {
   const { data: postData, loading: postLoading } = useQuery(GET_POST, {
     variables: { id: Number(id) },
     skip: !isEdit,
+    // エディタは必ずサーバーの最新内容から編集を始める。
+    // キャッシュ(ビルド時スナップショット由来)を元に編集すると、古い内容で上書き保存してしまう
+    fetchPolicy: 'network-only',
   });
 
   const type: 'BLOG' | 'ACTIVITY' =

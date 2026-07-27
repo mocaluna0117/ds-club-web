@@ -19,10 +19,13 @@ const members_service_1 = require("./members.service");
 const member_model_1 = require("./member.model");
 const member_input_1 = require("./member.input");
 const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
+const rebuild_service_1 = require("../rebuild/rebuild.service");
 let MembersResolver = class MembersResolver {
     membersService;
-    constructor(membersService) {
+    rebuildService;
+    constructor(membersService, rebuildService) {
         this.membersService = membersService;
+        this.rebuildService = rebuildService;
     }
     findAll() {
         return this.membersService.findAll();
@@ -30,14 +33,20 @@ let MembersResolver = class MembersResolver {
     findOne(id) {
         return this.membersService.findOne(id);
     }
-    createMember(input) {
-        return this.membersService.create(input);
+    async createMember(input) {
+        const member = await this.membersService.create(input);
+        this.rebuildService.trigger();
+        return member;
     }
-    updateMember(id, input) {
-        return this.membersService.update(id, input);
+    async updateMember(id, input) {
+        const member = await this.membersService.update(id, input);
+        this.rebuildService.trigger();
+        return member;
     }
-    removeMember(id) {
-        return this.membersService.remove(id);
+    async removeMember(id) {
+        const member = await this.membersService.remove(id);
+        this.rebuildService.trigger();
+        return member;
     }
 };
 exports.MembersResolver = MembersResolver;
@@ -60,7 +69,7 @@ __decorate([
     __param(0, (0, graphql_1.Args)('input')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [member_input_1.CreateMemberInput]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], MembersResolver.prototype, "createMember", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
@@ -69,7 +78,7 @@ __decorate([
     __param(1, (0, graphql_1.Args)('input')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, member_input_1.UpdateMemberInput]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], MembersResolver.prototype, "updateMember", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
@@ -77,10 +86,11 @@ __decorate([
     __param(0, (0, graphql_1.Args)('id', { type: () => graphql_1.Int })),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], MembersResolver.prototype, "removeMember", null);
 exports.MembersResolver = MembersResolver = __decorate([
     (0, graphql_1.Resolver)(() => member_model_1.Member),
-    __metadata("design:paramtypes", [members_service_1.MembersService])
+    __metadata("design:paramtypes", [members_service_1.MembersService,
+        rebuild_service_1.RebuildService])
 ], MembersResolver);
 //# sourceMappingURL=members.resolver.js.map

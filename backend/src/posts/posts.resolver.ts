@@ -5,10 +5,14 @@ import { PostsService } from './posts.service';
 import { Post } from './post.model';
 import { CreatePostInput, UpdatePostInput } from './post.input';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RebuildService } from '../rebuild/rebuild.service';
 
 @Resolver(() => Post)
 export class PostsResolver {
-  constructor(private readonly postsService: PostsService) {}
+  constructor(
+    private readonly postsService: PostsService,
+    private readonly rebuildService: RebuildService,
+  ) {}
 
   @Query(() => [Post], { name: 'posts' })
   findBlogs() {
@@ -33,22 +37,28 @@ export class PostsResolver {
 
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Post)
-  createPost(@Args('input') input: CreatePostInput, @Context() ctx: any) {
-    return this.postsService.create(input, ctx.req.user.id);
+  async createPost(@Args('input') input: CreatePostInput, @Context() ctx: any) {
+    const post = await this.postsService.create(input, ctx.req.user.id);
+    this.rebuildService.trigger();
+    return post;
   }
 
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Post)
-  updatePost(
+  async updatePost(
     @Args('id', { type: () => Int }) id: number,
     @Args('input') input: UpdatePostInput,
   ) {
-    return this.postsService.update(id, input);
+    const post = await this.postsService.update(id, input);
+    this.rebuildService.trigger();
+    return post;
   }
 
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Post)
-  removePost(@Args('id', { type: () => Int }) id: number) {
-    return this.postsService.remove(id);
+  async removePost(@Args('id', { type: () => Int }) id: number) {
+    const post = await this.postsService.remove(id);
+    this.rebuildService.trigger();
+    return post;
   }
 }

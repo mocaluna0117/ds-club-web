@@ -1,8 +1,10 @@
 import { MembersService } from './members.service';
 import { CreateMemberInput, UpdateMemberInput } from './member.input';
+import { RebuildService } from '../rebuild/rebuild.service';
 export declare class MembersResolver {
     private readonly membersService;
-    constructor(membersService: MembersService);
+    private readonly rebuildService;
+    constructor(membersService: MembersService, rebuildService: RebuildService);
     findAll(): import(".prisma/client").Prisma.PrismaPromise<{
         name: string;
         role: string;
@@ -27,7 +29,7 @@ export declare class MembersResolver {
         createdAt: Date;
         updatedAt: Date;
     }, never, import("@prisma/client/runtime/library").DefaultArgs, import(".prisma/client").Prisma.PrismaClientOptions>;
-    createMember(input: CreateMemberInput): import(".prisma/client").Prisma.Prisma__MemberClient<{
+    createMember(input: CreateMemberInput): Promise<{
         name: string;
         role: string;
         grade: number;
@@ -38,8 +40,8 @@ export declare class MembersResolver {
         id: number;
         createdAt: Date;
         updatedAt: Date;
-    }, never, import("@prisma/client/runtime/library").DefaultArgs, import(".prisma/client").Prisma.PrismaClientOptions>;
-    updateMember(id: number, input: UpdateMemberInput): import(".prisma/client").Prisma.Prisma__MemberClient<{
+    }>;
+    updateMember(id: number, input: UpdateMemberInput): Promise<{
         name: string;
         role: string;
         grade: number;
@@ -50,8 +52,8 @@ export declare class MembersResolver {
         id: number;
         createdAt: Date;
         updatedAt: Date;
-    }, never, import("@prisma/client/runtime/library").DefaultArgs, import(".prisma/client").Prisma.PrismaClientOptions>;
-    removeMember(id: number): import(".prisma/client").Prisma.Prisma__MemberClient<{
+    }>;
+    removeMember(id: number): Promise<{
         name: string;
         role: string;
         grade: number;
@@ -62,5 +64,5 @@ export declare class MembersResolver {
         id: number;
         createdAt: Date;
         updatedAt: Date;
-    }, never, import("@prisma/client/runtime/library").DefaultArgs, import(".prisma/client").Prisma.PrismaClientOptions>;
+    }>;
 }

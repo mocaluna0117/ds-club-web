@@ -17,7 +17,7 @@ export function AdminPage() {
   const { data: postsData, loading: postsLoading, refetch: refetchPosts } =
     useQuery(GET_ALL_POSTS_ADMIN, { fetchPolicy: 'cache-and-network', skip: !token });
   const { data: membersData } =
-    useQuery(GET_MEMBERS, { skip: !token });
+    useQuery(GET_MEMBERS, { fetchPolicy: 'cache-and-network', skip: !token });
 
   const [deleteTarget, setDeleteTarget] = useState<{ id: number; title: string } | null>(null);
 

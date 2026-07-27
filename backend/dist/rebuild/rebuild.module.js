@@ -6,18 +6,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MembersModule = void 0;
+exports.RebuildModule = void 0;
 const common_1 = require("@nestjs/common");
-const members_resolver_1 = require("./members.resolver");
-const members_service_1 = require("./members.service");
-const rebuild_module_1 = require("../rebuild/rebuild.module");
-let MembersModule = class MembersModule {
+const rebuild_service_1 = require("./rebuild.service");
+let RebuildModule = class RebuildModule {
 };
-exports.MembersModule = MembersModule;
-exports.MembersModule = MembersModule = __decorate([
+exports.RebuildModule = RebuildModule;
+exports.RebuildModule = RebuildModule = __decorate([
     (0, common_1.Module)({
-        imports: [rebuild_module_1.RebuildModule],
-        providers: [members_resolver_1.MembersResolver, members_service_1.MembersService],
+        providers: [rebuild_service_1.RebuildService],
+        exports: [rebuild_service_1.RebuildService],
     })
-], MembersModule);
-//# sourceMappingURL=members.module.js.map
+], RebuildModule);
+//# sourceMappingURL=rebuild.module.js.map

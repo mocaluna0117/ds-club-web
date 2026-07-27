@@ -1,8 +1,10 @@
 import { PostsService } from './posts.service';
 import { CreatePostInput, UpdatePostInput } from './post.input';
+import { RebuildService } from '../rebuild/rebuild.service';
 export declare class PostsResolver {
     private readonly postsService;
-    constructor(postsService: PostsService);
+    private readonly rebuildService;
+    constructor(postsService: PostsService, rebuildService: RebuildService);
     findBlogs(): import(".prisma/client").Prisma.PrismaPromise<({
         author: {
             name: string;
@@ -71,7 +73,7 @@ export declare class PostsResolver {
         published: boolean;
         authorId: number;
     }, never, import("@prisma/client/runtime/library").DefaultArgs, import(".prisma/client").Prisma.PrismaClientOptions>;
-    createPost(input: CreatePostInput, ctx: any): import(".prisma/client").Prisma.Prisma__PostClient<{
+    createPost(input: CreatePostInput, ctx: any): Promise<{
         author: {
             name: string;
             id: number;
@@ -87,8 +89,8 @@ export declare class PostsResolver {
         coverImage: string | null;
         published: boolean;
         authorId: number;
-    }, never, import("@prisma/client/runtime/library").DefaultArgs, import(".prisma/client").Prisma.PrismaClientOptions>;
-    updatePost(id: number, input: UpdatePostInput): import(".prisma/client").Prisma.Prisma__PostClient<{
+    }>;
+    updatePost(id: number, input: UpdatePostInput): Promise<{
         author: {
             name: string;
             id: number;
@@ -104,8 +106,8 @@ export declare class PostsResolver {
         coverImage: string | null;
         published: boolean;
         authorId: number;
-    }, never, import("@prisma/client/runtime/library").DefaultArgs, import(".prisma/client").Prisma.PrismaClientOptions>;
-    removePost(id: number): import(".prisma/client").Prisma.Prisma__PostClient<{
+    }>;
+    removePost(id: number): Promise<{
         author: {
             name: string;
             id: number;
@@ -121,5 +123,5 @@ export declare class PostsResolver {
         coverImage: string | null;
         published: boolean;
         authorId: number;
-    }, never, import("@prisma/client/runtime/library").DefaultArgs, import(".prisma/client").Prisma.PrismaClientOptions>;
+    }>;
 }

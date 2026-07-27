@@ -18,6 +18,7 @@ export function BlogPostPage() {
 
   const { data, loading, error } = useQuery(GET_POST, {
     variables: { id: Number(id) },
+    fetchPolicy: 'cache-and-network',
   });
 
   const [removePost, { loading: deleting }] = useMutation(REMOVE_POST, {
@@ -26,8 +27,8 @@ export function BlogPostPage() {
     },
   });
 
-  if (loading) return <Center py={20}><Spinner size="xl" color="blue.500" /></Center>;
-  if (error) return <Center py={20}><Text color="gray.500">記事が見つかりませんでした。</Text></Center>;
+  if (loading && !data) return <Center py={20}><Spinner size="xl" color="blue.500" /></Center>;
+  if (error && !data) return <Center py={20}><Text color="gray.500">記事が見つかりませんでした。</Text></Center>;
 
   const post = data!.post;
   const backTo = post.type === 'ACTIVITY' ? '/activities' : '/blog';
