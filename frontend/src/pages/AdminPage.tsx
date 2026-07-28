@@ -6,6 +6,7 @@ import {
   Flex, Badge, Spinner, Center, SimpleGrid, Dialog, Tabs,
 } from '@chakra-ui/react';
 import { useAuth } from '../context/AuthContext';
+import { useApiWarming } from '../lib/warmApi';
 import {
   GET_ALL_POSTS_ADMIN, GET_MEMBERS,
   REMOVE_POST, UPDATE_POST,
@@ -13,6 +14,9 @@ import {
 
 export function AdminPage() {
   const { token, adminName } = useAuth();
+
+  // 管理作業の間はスピンダウンさせない
+  useApiWarming({ heartbeat: true });
 
   const { data: postsData, loading: postsLoading, refetch: refetchPosts } =
     useQuery(GET_ALL_POSTS_ADMIN, { fetchPolicy: 'cache-and-network', skip: !token });
@@ -62,7 +66,7 @@ export function AdminPage() {
           </Button>
         </HStack>
       }>
-        {postsLoading ? (
+        {postsLoading && !postsData ? (
           <Center py={6}><Spinner size="sm" /></Center>
         ) : (
           <Tabs.Root defaultValue="blog" size="sm">

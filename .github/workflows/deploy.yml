@@ -31,6 +31,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      snapshot_outcome: ${{ steps.snapshot.outcome }}
     steps:
       - uses: actions/checkout@v4
 
@@ -47,8 +49,11 @@ jobs:
 
       # 公開データ(メンバー・記事・活動記録)をAPIから取得してバンドルに焼き込む。
       # 訪問者はAPIのコールドスタートを待たずに即時表示される。
-      # APIが寝ていても起きるまでリトライし、失敗してもビルドは継続する(コミット済みのスナップショットを使用)。
+      # APIが寝ていても起きるまでリトライする。失敗してもコミット済みのスナップショットで
+      # デプロイは継続させ、代わりに最後の report ジョブで run を赤くして通知を飛ばす。
       - name: Generate content snapshot
+        id: snapshot
+        continue-on-error: true
         working-directory: frontend
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
@@ -78,3 +83,17 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  # スナップショット生成の失敗を可視化する。デプロイ自体は成功させたまま run を赤くし、
+  # GitHub の失敗通知メールで気づけるようにする (API が suspend された等の唯一の検知手段)。
+  report:
+    needs: [build, deploy]
+    if: always() && needs.build.outputs.snapshot_outcome != 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Snapshot generation failed
+        run: |
+          echo "::error::公開データのスナップショット生成に失敗しました。"
+          echo "前回のスナップショットでデプロイは完了しています。"
+          echo "API (Render) が停止していないか、無料インスタンス時間を使い切っていないか確認してください。"
+          exit 1

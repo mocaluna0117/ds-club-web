@@ -17,26 +17,22 @@ import snapshot from '../data/snapshot.json';
 export function primeCache() {
   if (!snapshot.generatedAt) return;
   try {
-    // 空のリストは注入しない: スナップショット生成時にデータが無かった(または取得に失敗した)場合に
-    // 「メンバーがいません」等の誤った空表示を出さず、通常のスピナー+API取得にフォールバックさせる
-    if (snapshot.members.length > 0) {
-      apolloClient.writeQuery({
-        query: GET_MEMBERS,
-        data: { members: snapshot.members } as unknown as GetMembersQuery,
-      });
-    }
-    if (snapshot.posts.length > 0) {
-      apolloClient.writeQuery({
-        query: GET_POSTS,
-        data: { posts: snapshot.posts } as unknown as GetPostsQuery,
-      });
-    }
-    if (snapshot.activities.length > 0) {
-      apolloClient.writeQuery({
-        query: GET_ACTIVITIES,
-        data: { activities: snapshot.activities } as unknown as GetActivitiesQuery,
-      });
-    }
+    // 空のリストも注入する。スナップショットが空なのは「本当にデータが無い」場合がほとんどで、
+    // その正しい答えを即座に見せるほうが、43秒スピナーの末に同じ空表示を出すより良い。
+    // スナップショットが古くて実際にはデータがある場合も、裏の再取得が着地した時点で差し替わる
+    // (その間は各ページが「最新データを取得中」を表示する)。
+    apolloClient.writeQuery({
+      query: GET_MEMBERS,
+      data: { members: snapshot.members } as unknown as GetMembersQuery,
+    });
+    apolloClient.writeQuery({
+      query: GET_POSTS,
+      data: { posts: snapshot.posts } as unknown as GetPostsQuery,
+    });
+    apolloClient.writeQuery({
+      query: GET_ACTIVITIES,
+      data: { activities: snapshot.activities } as unknown as GetActivitiesQuery,
+    });
     for (const post of snapshot.postDetails) {
       apolloClient.writeQuery({
         query: GET_POST,

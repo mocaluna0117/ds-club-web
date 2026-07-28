@@ -3,13 +3,15 @@ import { useQuery, useMutation } from '@apollo/client';
 import { useNavigate, Navigate, useSearchParams, useParams } from 'react-router-dom';
 import {
   Container, Heading, VStack, Input, Button, HStack,
-  Box, Text, Flex, Badge, Spinner, Center,
+  Box, Text, Flex, Badge,
 } from '@chakra-ui/react';
 import { Field } from '@chakra-ui/react';
 import { RichTextEditor } from '../components/editor/RichTextEditor';
 import { TemplateModal } from '../components/editor/TemplateModal';
 import { CREATE_POST, UPDATE_POST, GET_POST } from '../graphql/queries';
 import { useAuth } from '../context/AuthContext';
+import { LoadingState } from '../components/LoadingState';
+import { useApiWarming } from '../lib/warmApi';
 
 export function PostEditorPage() {
   const { token } = useAuth();
@@ -17,6 +19,9 @@ export function PostEditorPage() {
   const [searchParams] = useSearchParams();
   const { id } = useParams<{ id: string }>();
   const isEdit = !!id;
+
+  // 執筆中にスピンダウンして保存時に1分待たされるのを防ぐ
+  useApiWarming({ heartbeat: true });
 
   const [createPost, { loading: creating }] = useMutation(CREATE_POST);
   const [updatePost, { loading: updating }] = useMutation(UPDATE_POST);
@@ -51,7 +56,7 @@ export function PostEditorPage() {
   }, [isEdit, postData, initialized]);
 
   if (!token) return <Navigate to="/login" replace />;
-  if (isEdit && postLoading) return <Center py={20}><Spinner size="xl" color="blue.500" /></Center>;
+  if (isEdit && postLoading) return <LoadingState />;
 
   const handleSubmit = async (publish: boolean) => {
     if (!title.trim()) return;

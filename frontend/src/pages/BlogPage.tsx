@@ -2,24 +2,29 @@ import { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-  Container, Heading, VStack, Box, Text, Image, Spinner, Center,
+  Container, Heading, VStack, Box, Text, Image, Center,
   Flex, Button, HStack, Badge, Dialog,
 } from '@chakra-ui/react';
 import { GET_POSTS, GET_ALL_POSTS_ADMIN, REMOVE_POST } from '../graphql/queries';
 import { useAuth } from '../context/AuthContext';
+import { LoadingState } from '../components/LoadingState';
+import { publicFetchPolicy } from '../lib/publicFetchPolicy';
 
 export function BlogPage() {
   const { token } = useAuth();
   const [deleteTarget, setDeleteTarget] = useState<{ id: number; title: string } | null>(null);
 
-  const { data: publicData, loading: publicLoading } = useQuery(GET_POSTS, {
-    fetchPolicy: 'cache-and-network',
-    skip: !!token,
-  });
-  const { data: adminData, loading: adminLoading, refetch } = useQuery(GET_ALL_POSTS_ADMIN, {
-    fetchPolicy: 'cache-and-network',
-    skip: !token,
-  });
+  const { data: publicData, loading: publicLoading, error: publicError, refetch: refetchPublic } =
+    useQuery(GET_POSTS, {
+      // 未ログインはスナップショットが新しければAPIを叩かない(Renderを起こさない)
+      fetchPolicy: publicFetchPolicy(),
+      skip: !!token,
+    });
+  const { data: adminData, loading: adminLoading, error: adminError, refetch } =
+    useQuery(GET_ALL_POSTS_ADMIN, {
+      fetchPolicy: 'cache-and-network',
+      skip: !token,
+    });
 
   const [removePost, { loading: deleting }] = useMutation(REMOVE_POST, {
     onCompleted: () => { setDeleteTarget(null); void refetch(); },
@@ -31,7 +36,18 @@ export function BlogPage() {
     ? (adminData?.allPosts ?? []).filter((p) => p.type === 'BLOG')
     : (publicData?.posts ?? []);
 
-  if (loading && !data) return <Center py={20}><Spinner size="xl" color="blue.500" /></Center>;
+  const error = token ? adminError : publicError;
+  const retry = token ? refetch : refetchPublic;
+
+  if (loading && !data) return <LoadingState onRetry={() => void retry()} />;
+  // エラーを空表示にすると、障害・ログイン失効・記事0件が区別できなくなる
+  if (error && !data) {
+    return (
+      <Center py={20}>
+        <Text color="gray.500">記事を読み込めませんでした。時間をおいて再度お試しください。</Text>
+      </Center>
+    );
+  }
 
   return (
     <Container as="main" maxW="800px" py={12}>

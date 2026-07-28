@@ -2,13 +2,15 @@ import { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { useParams, Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
-  Container, Heading, Text, Image, Spinner, Center, Box, Link,
+  Container, Heading, Text, Image, Center, Box, Link,
   Button, Flex, HStack, Dialog,
 } from '@chakra-ui/react';
 import 'katex/dist/katex.min.css';
 import '../components/editor/editor.css';
 import { GET_POST, REMOVE_POST } from '../graphql/queries';
 import { useAuth } from '../context/AuthContext';
+import { LoadingState } from '../components/LoadingState';
+import { publicFetchPolicy } from '../lib/publicFetchPolicy';
 
 export function BlogPostPage() {
   const { id } = useParams<{ id: string }>();
@@ -16,21 +18,24 @@ export function BlogPostPage() {
   const navigate = useNavigate();
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  const { data, loading, error } = useQuery(GET_POST, {
+  const { data, loading, refetch } = useQuery(GET_POST, {
     variables: { id: Number(id) },
-    fetchPolicy: 'cache-and-network',
+    // 未ログインはスナップショットが新しければAPIを叩かない。
+    // スナップショット未収録の記事はキャッシュミスになるので通常どおり取得される
+    fetchPolicy: token ? 'cache-and-network' : publicFetchPolicy(),
   });
+  // data はあっても post が無い場合(存在しないID・部分的なレスポンス)があるため post 自体で判定する
+  const post = data?.post;
 
   const [removePost, { loading: deleting }] = useMutation(REMOVE_POST, {
     onCompleted: () => {
-      navigate(post.type === 'ACTIVITY' ? '/activities' : '/blog');
+      navigate(post?.type === 'ACTIVITY' ? '/activities' : '/blog');
     },
   });
 
-  if (loading && !data) return <Center py={20}><Spinner size="xl" color="blue.500" /></Center>;
-  if (error && !data) return <Center py={20}><Text color="gray.500">記事が見つかりませんでした。</Text></Center>;
+  if (loading && !post) return <LoadingState onRetry={() => void refetch()} />;
+  if (!post) return <Center py={20}><Text color="gray.500">記事が見つかりませんでした。</Text></Center>;
 
-  const post = data!.post;
   const backTo = post.type === 'ACTIVITY' ? '/activities' : '/blog';
   const backLabel = post.type === 'ACTIVITY' ? '← 活動記録一覧へ' : '← 技術記事一覧へ';
 

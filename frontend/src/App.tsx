@@ -41,6 +41,8 @@ function App() {
           <Flex minH="100vh" flexDir="column">
             <Navbar />
             <Box flex={1} pt="76px">
+              {/* エディタチャンクの取得は GitHub Pages からで API とは無関係。
+                  「サーバーを起動しています」は出さず素のスピナーにする */}
               <Suspense fallback={<Center py={20}><Spinner size="xl" color="blue.500" /></Center>}>
                 <Routes>
                   <Route path="/" element={<HomePage />} />

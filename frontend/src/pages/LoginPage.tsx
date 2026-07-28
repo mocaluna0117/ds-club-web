@@ -7,12 +7,18 @@ import {
 import { Field } from '@chakra-ui/react';
 import { LOGIN } from '../graphql/queries';
 import { useAuth } from '../context/AuthContext';
+import { useSlowFlag } from '../lib/useSlowFlag';
+import { useApiWarming } from '../lib/warmApi';
 
 export function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' });
   const { login } = useAuth();
   const navigate = useNavigate();
   const [doLogin, { loading, error }] = useMutation(LOGIN);
+  const slow = useSlowFlag(loading);
+
+  // フォームを埋めている十数秒の間に API の起動を進めておく
+  useApiWarming();
 
   const handleSubmit = async () => {
     const { data } = await doLogin({ variables: { input: form } });
@@ -65,6 +71,11 @@ export function LoginPage() {
             <Button type="submit" colorPalette="blue" loading={loading} size="lg">
               ログイン
             </Button>
+            {slow && (
+              <Text color="gray.500" fontSize="xs" textAlign="center">
+                サーバーを起動しています。しばらく利用がなかったため、最大1分ほどかかることがあります。
+              </Text>
+            )}
           </VStack>
         </Box>
       </Box>

@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import {
-  Container, Heading, SimpleGrid, Box, Text, Spinner, Center, Link,
+  Container, Heading, SimpleGrid, Box, Text, Center, Link,
   Avatar, Button, Dialog, Field, Input, Textarea, VStack, HStack,
 } from '@chakra-ui/react';
 import { GET_MEMBERS, CREATE_MEMBER, UPDATE_MEMBER, REMOVE_MEMBER } from '../graphql/queries';
 import { useAuth } from '../context/AuthContext';
+import { LoadingState } from '../components/LoadingState';
+import { publicFetchPolicy } from '../lib/publicFetchPolicy';
 
 const ROLE_OPTIONS = ['メンバー', '代表', '運営', 'OB/OG'] as const;
 const GRADE_OPTIONS = [
@@ -83,7 +85,10 @@ function MemberFormFields({ form, onChange }: {
 
 export function MembersPage() {
   const { token } = useAuth();
-  const { data, loading, error } = useQuery(GET_MEMBERS, { fetchPolicy: 'cache-and-network' });
+  const { data, loading, error, refetch } = useQuery(GET_MEMBERS, {
+    // 未ログインはスナップショットが新しければAPIを叩かない(Renderを起こさない)
+    fetchPolicy: token ? 'cache-and-network' : publicFetchPolicy(),
+  });
 
   const [createMember, { loading: creating, error: createError }] = useMutation(CREATE_MEMBER, {
     refetchQueries: [GET_MEMBERS],
@@ -139,7 +144,7 @@ export function MembersPage() {
     setEditTarget(null);
   };
 
-  if (loading && !data) return <Center py={20}><Spinner size="xl" color="blue.500" /></Center>;
+  if (loading && !data) return <LoadingState onRetry={() => void refetch()} />;
   if (error && !data) return <Center py={20}><Text color="gray.500">エラーが発生しました。</Text></Center>;
 
   return (
