@@ -27,11 +27,14 @@ let PostsService = class PostsService {
             orderBy: { createdAt: 'desc' },
         });
     }
-    findOne(id) {
-        return this.prisma.post.findUniqueOrThrow({
-            where: { id },
+    async findOne(id, includeUnpublished = false) {
+        const post = await this.prisma.post.findFirst({
+            where: { id, ...(includeUnpublished ? {} : { published: true }) },
             include: { author: { select: { id: true, name: true } } },
         });
+        if (!post)
+            throw new common_1.NotFoundException('記事が見つかりませんでした');
+        return post;
     }
     create(input, authorId) {
         return this.prisma.post.create({

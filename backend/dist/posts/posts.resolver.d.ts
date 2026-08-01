@@ -1,6 +1,14 @@
 import { PostsService } from './posts.service';
 import { CreatePostInput, UpdatePostInput } from './post.input';
 import { RebuildService } from '../rebuild/rebuild.service';
+type GqlContext = {
+    req: {
+        user?: {
+            id: number;
+            email: string;
+        };
+    };
+};
 export declare class PostsResolver {
     private readonly postsService;
     private readonly rebuildService;
@@ -56,7 +64,7 @@ export declare class PostsResolver {
         published: boolean;
         authorId: number;
     })[]>;
-    findOne(id: number): import(".prisma/client").Prisma.Prisma__PostClient<{
+    findOne(id: number, ctx: GqlContext): Promise<{
         author: {
             name: string;
             id: number;
@@ -72,8 +80,8 @@ export declare class PostsResolver {
         coverImage: string | null;
         published: boolean;
         authorId: number;
-    }, never, import("@prisma/client/runtime/library").DefaultArgs, import(".prisma/client").Prisma.PrismaClientOptions>;
-    createPost(input: CreatePostInput, ctx: any): Promise<{
+    }>;
+    createPost(input: CreatePostInput, ctx: GqlContext): Promise<{
         author: {
             name: string;
             id: number;
@@ -125,3 +133,4 @@ export declare class PostsResolver {
         authorId: number;
     }>;
 }
+export {};

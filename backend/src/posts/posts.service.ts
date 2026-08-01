@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PostType } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePostInput, UpdatePostInput } from './post.input';
@@ -18,11 +18,16 @@ export class PostsService {
     });
   }
 
-  findOne(id: number) {
-    return this.prisma.post.findUniqueOrThrow({
-      where: { id },
+  /**
+   * @param includeUnpublished 管理者のみ true。未ログインには下書きを返さない
+   */
+  async findOne(id: number, includeUnpublished = false) {
+    const post = await this.prisma.post.findFirst({
+      where: { id, ...(includeUnpublished ? {} : { published: true }) },
       include: { author: { select: { id: true, name: true } } },
     });
+    if (!post) throw new NotFoundException('記事が見つかりませんでした');
+    return post;
   }
 
   create(input: CreatePostInput, authorId: number) {

@@ -20,6 +20,7 @@ const posts_service_1 = require("./posts.service");
 const post_model_1 = require("./post.model");
 const post_input_1 = require("./post.input");
 const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
+const optional_jwt_auth_guard_1 = require("../auth/optional-jwt-auth.guard");
 const rebuild_service_1 = require("../rebuild/rebuild.service");
 let PostsResolver = class PostsResolver {
     postsService;
@@ -37,8 +38,8 @@ let PostsResolver = class PostsResolver {
     findAllAdmin() {
         return this.postsService.findAll(false);
     }
-    findOne(id) {
-        return this.postsService.findOne(id);
+    findOne(id, ctx) {
+        return this.postsService.findOne(id, !!ctx.req.user);
     }
     async createPost(input, ctx) {
         const post = await this.postsService.create(input, ctx.req.user.id);
@@ -77,10 +78,12 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], PostsResolver.prototype, "findAllAdmin", null);
 __decorate([
+    (0, common_1.UseGuards)(optional_jwt_auth_guard_1.OptionalJwtAuthGuard),
     (0, graphql_1.Query)(() => post_model_1.Post, { name: 'post' }),
     __param(0, (0, graphql_1.Args)('id', { type: () => graphql_1.Int })),
+    __param(1, (0, graphql_1.Context)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", void 0)
 ], PostsResolver.prototype, "findOne", null);
 __decorate([

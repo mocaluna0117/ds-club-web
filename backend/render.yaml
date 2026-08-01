@@ -15,5 +15,7 @@ services:
         sync: false
       - key: GITHUB_REBUILD_TOKEN # コンテンツ更新時にフロント再ビルドを起動するPAT (任意)
         sync: false
+      - key: NODE_ENV # イントロスペクション/Sandbox の無効化とエラー内容の秘匿に使う
+        value: production
       - key: PORT
         value: 3001

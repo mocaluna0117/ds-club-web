@@ -17,6 +17,7 @@ const members_module_1 = require("./members/members.module");
 const posts_module_1 = require("./posts/posts.module");
 const auth_module_1 = require("./auth/auth.module");
 const templates_module_1 = require("./templates/templates.module");
+const isProduction = process.env.NODE_ENV === 'production';
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -29,6 +30,17 @@ exports.AppModule = AppModule = __decorate([
                 autoSchemaFile: (0, path_1.join)(process.cwd(), 'src/schema.gql'),
                 sortSchema: true,
                 context: ({ req }) => ({ req }),
+                introspection: !isProduction,
+                playground: !isProduction,
+                formatError: (formattedError) => {
+                    if (!isProduction)
+                        return formattedError;
+                    const message = formattedError.message ?? '';
+                    const leaksInternals = message.includes('prisma.') || message.includes('Invalid `') || message.length > 300;
+                    return leaksInternals
+                        ? { ...formattedError, message: 'リクエストを処理できませんでした' }
+                        : formattedError;
+                },
             }),
             prisma_module_1.PrismaModule,
             members_module_1.MembersModule,

@@ -21,7 +21,7 @@ export declare class PostsService {
         published: boolean;
         authorId: number;
     })[]>;
-    findOne(id: number): import(".prisma/client").Prisma.Prisma__PostClient<{
+    findOne(id: number, includeUnpublished?: boolean): Promise<{
         author: {
             name: string;
             id: number;
@@ -37,7 +37,7 @@ export declare class PostsService {
         coverImage: string | null;
         published: boolean;
         authorId: number;
-    }, never, import("@prisma/client/runtime/library").DefaultArgs, import(".prisma/client").Prisma.PrismaClientOptions>;
+    }>;
     create(input: CreatePostInput, authorId: number): import(".prisma/client").Prisma.Prisma__PostClient<{
         author: {
             name: string;
