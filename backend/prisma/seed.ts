@@ -11,22 +11,20 @@ const prisma = new PrismaClient();
  *
  *   ADMIN_EMAIL=... ADMIN_PASSWORD=... ADMIN_NAME=... npx prisma db seed
  */
-function required(key: string): string {
-  const value = process.env[key];
-  if (!value) {
-    console.error(
-      `[seed] 環境変数 ${key} が未設定です。` +
-        ' ADMIN_EMAIL / ADMIN_PASSWORD / ADMIN_NAME を指定して実行してください。',
-    );
-    process.exit(1);
-  }
-  return value;
-}
-
 async function main() {
-  const email = required('ADMIN_EMAIL');
-  const password = required('ADMIN_PASSWORD');
-  const name = required('ADMIN_NAME');
+  const email = process.env.ADMIN_EMAIL;
+  const password = process.env.ADMIN_PASSWORD;
+  const name = process.env.ADMIN_NAME;
+
+  // このシードは Render のビルド中にも実行される。認証情報が渡されていないときは
+  // 何もせず正常終了する。ここで失敗させるとデプロイ全体が止まり、
+  // 既定値を用意すると公開リポジトリに認証情報を書くことになる
+  if (!email || !password || !name) {
+    console.log(
+      '[seed] ADMIN_EMAIL / ADMIN_PASSWORD / ADMIN_NAME が未設定のため、管理者の作成をスキップしました。',
+    );
+    return;
+  }
 
   if (password.length < 12) {
     console.error('[seed] ADMIN_PASSWORD は12文字以上にしてください。');
