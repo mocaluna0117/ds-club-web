@@ -101,23 +101,30 @@ export function MembersPage() {
   });
 
   const [createForm, setCreateForm] = useState<MemberForm>(INITIAL_FORM);
+  const [createOpen, setCreateOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<{ id: number } & MemberForm | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<{ id: number; name: string } | null>(null);
 
   const handleCreate = async () => {
-    await createMember({
-      variables: {
-        input: {
-          name: createForm.name,
-          role: createForm.role,
-          grade: createForm.grade,
-          bio: createForm.bio || null,
-          github: createForm.github || null,
-          twitter: createForm.twitter || null,
+    if (!createForm.name.trim()) return;
+    try {
+      await createMember({
+        variables: {
+          input: {
+            name: createForm.name.trim(),
+            role: createForm.role,
+            grade: createForm.grade,
+            bio: createForm.bio || null,
+            github: createForm.github || null,
+            twitter: createForm.twitter || null,
+          },
         },
-      },
-    });
-    setCreateForm(INITIAL_FORM);
+      });
+      setCreateForm(INITIAL_FORM);
+      setCreateOpen(false);
+    } catch {
+      // 失敗時は入力内容を残したままモーダルを開いておく (エラーは createError に出る)
+    }
   };
 
   const handleDelete = async () => {
@@ -127,21 +134,25 @@ export function MembersPage() {
   };
 
   const handleUpdate = async () => {
-    if (!editTarget) return;
-    await updateMember({
-      variables: {
-        id: editTarget.id,
-        input: {
-          name: editTarget.name,
-          role: editTarget.role,
-          grade: editTarget.grade,
-          bio: editTarget.bio || null,
-          github: editTarget.github || null,
-          twitter: editTarget.twitter || null,
+    if (!editTarget || !editTarget.name.trim()) return;
+    try {
+      await updateMember({
+        variables: {
+          id: editTarget.id,
+          input: {
+            name: editTarget.name.trim(),
+            role: editTarget.role,
+            grade: editTarget.grade,
+            bio: editTarget.bio || null,
+            github: editTarget.github || null,
+            twitter: editTarget.twitter || null,
+          },
         },
-      },
-    });
-    setEditTarget(null);
+      });
+      setEditTarget(null);
+    } catch {
+      // 失敗時は入力内容を残したままモーダルを開いておく (エラーは updateError に出る)
+    }
   };
 
   if (loading && !data) return <LoadingState onRetry={() => void refetch()} />;
@@ -152,7 +163,7 @@ export function MembersPage() {
       <HStack justify="space-between" mb={8}>
         <Heading as="h1" size="2xl" color="gray.800">メンバー紹介</Heading>
         {token && (
-          <Dialog.Root>
+          <Dialog.Root open={createOpen} onOpenChange={({ open }) => setCreateOpen(open)}>
             <Dialog.Trigger asChild>
               <Button colorPalette="blue">+ メンバーを追加</Button>
             </Dialog.Trigger>
@@ -172,7 +183,13 @@ export function MembersPage() {
                   <Dialog.ActionTrigger asChild>
                     <Button variant="outline">キャンセル</Button>
                   </Dialog.ActionTrigger>
-                  <Button type="submit" form="create-member-form" colorPalette="blue" loading={creating}>
+                  <Button
+                    type="submit"
+                    form="create-member-form"
+                    colorPalette="blue"
+                    loading={creating}
+                    disabled={!createForm.name.trim()}
+                  >
                     追加する
                   </Button>
                 </Dialog.Footer>
@@ -209,7 +226,13 @@ export function MembersPage() {
               <Dialog.ActionTrigger asChild>
                 <Button variant="outline">キャンセル</Button>
               </Dialog.ActionTrigger>
-              <Button type="submit" form="edit-member-form" colorPalette="blue" loading={updating}>
+              <Button
+                type="submit"
+                form="edit-member-form"
+                colorPalette="blue"
+                loading={updating}
+                disabled={!editTarget?.name.trim()}
+              >
                 保存する
               </Button>
             </Dialog.Footer>
