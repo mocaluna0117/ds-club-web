@@ -2,7 +2,9 @@ services:
   - type: web
     name: ds-club-api
     runtime: node
-    buildCommand: npm install && npx prisma generate && npx prisma migrate deploy && npm run build
+    # --include=dev は必須。ビルドに要る @nestjs/cli / typescript / prisma は devDependencies にあり、
+    # NODE_ENV=production だと npm が既定でこれらを省いてビルドが失敗する
+    buildCommand: npm install --include=dev && npx prisma generate && npx prisma migrate deploy && npm run build
     startCommand: npm run start:prod
     envVars:
       - key: DATABASE_URL

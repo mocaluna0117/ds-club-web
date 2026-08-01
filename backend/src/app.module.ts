@@ -9,7 +9,9 @@ import { PostsModule } from './posts/posts.module';
 import { AuthModule } from './auth/auth.module';
 import { TemplatesModule } from './templates/templates.module';
 
-const isProduction = process.env.NODE_ENV === 'production';
+// RENDER は Render が全サービスに必ず入れる変数。render.yaml の Blueprint が
+// 適用されていない場合でも本番と判定できるよう、NODE_ENV と併用する
+const isProduction = process.env.NODE_ENV === 'production' || process.env.RENDER === 'true';
 
 @Module({
   imports: [
