@@ -10,6 +10,7 @@ import { useAuth } from '../context/AuthContext';
 import { useSlowFlag } from '../lib/useSlowFlag';
 import { useApiWarming } from '../lib/warmApi';
 import { consumeSessionExpiredFlag } from '../lib/authToken';
+import { PageTitle } from '../components/PageTitle';
 
 export function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -33,6 +34,7 @@ export function LoginPage() {
 
   return (
     <Flex as="main" align="center" justify="center" minH="70vh" px={4}>
+      <PageTitle title="管理者ログイン" />
       <Box
         bg="white"
         border="1px solid"

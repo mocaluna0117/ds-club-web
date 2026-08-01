@@ -1,5 +1,6 @@
 import { Box, Container, Heading, Text, SimpleGrid, VStack, HStack, Button, Link } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
+import { PageTitle } from '../components/PageTitle';
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -53,6 +54,7 @@ const FEATURES: Feature[] = [
 export function HomePage() {
   return (
     <Box as="main">
+      <PageTitle />
       <Box
         as="section"
         bgGradient="to-br"
@@ -143,7 +145,7 @@ function FeatureCard({ feature: f }: { feature: Feature }) {
         <Heading as="h3" size="md" mb={2} color="gray.800">{f.title}</Heading>
         <Text color="gray.500" fontSize={{ base: 'sm', md: 'md' }} lineHeight="tall">{f.desc}</Text>
         {f.linkLabel && (
-          <Text color="blue.500" fontWeight="bold" fontSize={{ base: 'sm', md: 'md' }} mt={2}>
+          <Text color="blue.600" fontWeight="bold" fontSize={{ base: 'sm', md: 'md' }} mt={2}>
             {f.linkLabel}
           </Text>
         )}
@@ -155,7 +157,7 @@ function FeatureCard({ feature: f }: { feature: Feature }) {
                 href={l.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                color="blue.500"
+                color="blue.600"
                 fontWeight="bold"
                 fontSize={{ base: 'sm', md: 'md' }}
               >

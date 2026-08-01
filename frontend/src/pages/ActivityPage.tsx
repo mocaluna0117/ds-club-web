@@ -8,6 +8,7 @@ import {
 import { GET_ACTIVITIES, GET_ALL_POSTS_ADMIN, REMOVE_POST } from '../graphql/queries';
 import { useAuth } from '../context/AuthContext';
 import { LoadingState } from '../components/LoadingState';
+import { PageTitle } from '../components/PageTitle';
 import { publicFetchPolicy } from '../lib/publicFetchPolicy';
 
 export function ActivityPage() {
@@ -51,6 +52,7 @@ export function ActivityPage() {
 
   return (
     <Container as="main" maxW="800px" py={12}>
+      <PageTitle title="活動記録" />
       <Flex justify="space-between" align="center" mb={2}>
         <Heading as="h1" size="2xl" color="gray.800">活動記録</Heading>
         {token && (
@@ -62,7 +64,7 @@ export function ActivityPage() {
       <Text color="gray.500" mb={8}>サークルの普段の活動を記録しています</Text>
 
       {posts.length === 0 && (
-        <Center py={8}><Text color="gray.400">まだ活動記録がありません。</Text></Center>
+        <Center py={8}><Text color="gray.600">まだ活動記録がありません。</Text></Center>
       )}
 
       <VStack gap={6} align="stretch">
@@ -92,7 +94,7 @@ export function ActivityPage() {
                     )}
                   </Flex>
                   {post.excerpt && <Text color="gray.500" lineHeight="tall" mb={4}>{post.excerpt}</Text>}
-                  <Box display="flex" gap={4} color="gray.400" fontSize="sm">
+                  <Box display="flex" gap={4} color="gray.600" fontSize="sm">
                     <Text>{post.author.name}</Text>
                     <Text>{new Date(post.createdAt).toLocaleDateString('ja-JP')}</Text>
                   </Box>

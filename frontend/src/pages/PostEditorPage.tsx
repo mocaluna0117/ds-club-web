@@ -28,7 +28,12 @@ export function PostEditorPage() {
   const [updatePost, { loading: updating }] = useMutation(UPDATE_POST);
   const loading = creating || updating;
 
-  const { data: postData, loading: postLoading } = useQuery(GET_POST, {
+  const {
+    data: postData,
+    loading: postLoading,
+    error: postError,
+    refetch: refetchPost,
+  } = useQuery(GET_POST, {
     variables: { id: Number(id) },
     skip: !isEdit,
     // エディタは必ずサーバーの最新内容から編集を始める。
@@ -73,10 +78,38 @@ export function PostEditorPage() {
   }, [dirty, draftKey, title, content]);
 
   if (!token) return <Navigate to="/login" replace />;
-  if (isEdit && postLoading) return <LoadingState />;
+  if (isEdit && postLoading && !postData) return <LoadingState onRetry={() => void refetchPost()} />;
+  // 取得に失敗したまま空のエディタを開かせない。
+  // 開いてしまうと、そのまま保存した瞬間に本文が空で上書きされ、元に戻せない
+  if (isEdit && !postData) {
+    return (
+      <Container maxW="800px" py={16}>
+        <VStack gap={4}>
+          <Text color="gray.700" fontWeight="semibold">記事を読み込めませんでした</Text>
+          <Text color="gray.600" fontSize="sm" textAlign="center">
+            {postError
+              ? 'サーバーに接続できなかったか、記事が見つかりませんでした。'
+              : '記事が見つかりませんでした。'}
+            <br />
+            この状態では編集できません(空の内容で上書きしてしまうため)。
+          </Text>
+          <HStack gap={3}>
+            <Button size="sm" colorPalette="blue" onClick={() => void refetchPost()}>
+              再試行する
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => navigate('/admin')}>
+              管理画面へ戻る
+            </Button>
+          </HStack>
+        </VStack>
+      </Container>
+    );
+  }
 
   const handleSubmit = async (publish: boolean) => {
     if (!title.trim()) return;
+    // 読み込みが終わる前の保存は、空の内容でサーバーを上書きしてしまう
+    if (isEdit && !initialized) return;
 
     if (isEdit) {
       const { data } = await updatePost({
@@ -133,7 +166,7 @@ export function PostEditorPage() {
                   ? (type === 'ACTIVITY' ? `/activities/${id}` : `/blog/${id}`)
                   : (type === 'ACTIVITY' ? '/activities' : '/blog')
               )}
-              color="blue.500"
+              color="blue.600"
               fontSize="sm"
               fontWeight="semibold"
               flexShrink={0}
@@ -240,7 +273,7 @@ export function PostEditorPage() {
           <RichTextEditor content={content} onChange={setContent} />
         </Box>
 
-        <Text fontSize="xs" color="gray.400">
+        <Text fontSize="xs" color="gray.600">
           <strong>/</strong> でコマンドメニューを開く
           　<strong>$$...$$</strong> で LaTeX 数式（例: <code>$$\int f(x)dx$$</code>）
         </Text>

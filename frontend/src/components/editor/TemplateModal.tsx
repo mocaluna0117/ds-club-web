@@ -84,7 +84,7 @@ export function TemplateModal({ open, onClose, type, currentTitle, currentConten
                 {loading && <Center py={6}><Spinner size="sm" /></Center>}
                 {!loading && data?.templates.length === 0 && (
                   <Center py={6}>
-                    <Text color="gray.400" fontSize="sm">テンプレートはまだありません</Text>
+                    <Text color="gray.600" fontSize="sm">テンプレートはまだありません</Text>
                   </Center>
                 )}
                 <VStack gap={2} align="stretch">
@@ -105,7 +105,7 @@ export function TemplateModal({ open, onClose, type, currentTitle, currentConten
                       <Box>
                         <Text fontWeight="medium" fontSize="sm">{t.name}</Text>
                         {t.titleTemplate && (
-                          <Text fontSize="xs" color="gray.400" mt={0.5}>タイトル: {t.titleTemplate}</Text>
+                          <Text fontSize="xs" color="gray.600" mt={0.5}>タイトル: {t.titleTemplate}</Text>
                         )}
                       </Box>
                       <HStack gap={2}>
@@ -141,7 +141,7 @@ export function TemplateModal({ open, onClose, type, currentTitle, currentConten
                   size="sm"
                 />
                 {currentTitle && (
-                  <Text fontSize="xs" color="gray.400">タイトル「{currentTitle}」も保存されます</Text>
+                  <Text fontSize="xs" color="gray.600">タイトル「{currentTitle}」も保存されます</Text>
                 )}
                 <Button
                   colorPalette="blue"

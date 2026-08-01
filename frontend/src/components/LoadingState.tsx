@@ -21,7 +21,7 @@ export function LoadingState({ onRetry }: { onRetry?: () => void }) {
             <Text color="gray.600" fontSize="sm" fontWeight="semibold">
               サーバーを起動しています
             </Text>
-            <Text color="gray.400" fontSize="xs">
+            <Text color="gray.600" fontSize="xs">
               しばらく利用がなかったため、最大1分ほどかかることがあります
             </Text>
           </VStack>

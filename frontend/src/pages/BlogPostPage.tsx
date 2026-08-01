@@ -11,6 +11,7 @@ import { GET_POST, REMOVE_POST } from '../graphql/queries';
 import { useAuth } from '../context/AuthContext';
 import { LoadingState } from '../components/LoadingState';
 import { publicFetchPolicy } from '../lib/publicFetchPolicy';
+import { PageTitle } from '../components/PageTitle';
 
 export function BlogPostPage() {
   const { id } = useParams<{ id: string }>();
@@ -41,8 +42,9 @@ export function BlogPostPage() {
 
   return (
     <Container as="main" maxW="760px" py={12}>
+      <PageTitle title={post.title} />
       <Flex justify="space-between" align="center" mb={6}>
-        <Link asChild color="blue.500" fontSize="sm">
+        <Link asChild color="blue.600" fontSize="sm">
           <RouterLink to={backTo}>{backLabel}</RouterLink>
         </Link>
         {token && (
@@ -63,7 +65,7 @@ export function BlogPostPage() {
       <Heading as="h1" size="2xl" fontWeight="extrabold" color="gray.800" mb={3}>
         {post.title}
       </Heading>
-      <Box display="flex" gap={4} color="gray.400" fontSize="sm" mb={8}>
+      <Box display="flex" gap={4} color="gray.600" fontSize="sm" mb={8}>
         <Text>{post.author.name}</Text>
         <Text>{new Date(post.createdAt).toLocaleDateString('ja-JP')}</Text>
       </Box>

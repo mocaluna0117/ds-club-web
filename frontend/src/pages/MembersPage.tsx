@@ -7,6 +7,7 @@ import {
 import { GET_MEMBERS, CREATE_MEMBER, UPDATE_MEMBER, REMOVE_MEMBER } from '../graphql/queries';
 import { useAuth } from '../context/AuthContext';
 import { LoadingState } from '../components/LoadingState';
+import { PageTitle } from '../components/PageTitle';
 import { publicFetchPolicy } from '../lib/publicFetchPolicy';
 
 const ROLE_OPTIONS = ['メンバー', '代表', '運営', 'OB/OG'] as const;
@@ -160,6 +161,7 @@ export function MembersPage() {
 
   return (
     <Container as="main" maxW="960px" py={12}>
+      <PageTitle title="メンバー紹介" />
       <HStack justify="space-between" mb={8}>
         <Heading as="h1" size="2xl" color="gray.800">メンバー紹介</Heading>
         {token && (
@@ -269,7 +271,7 @@ export function MembersPage() {
       </Dialog.Root>
 
       {(data?.members ?? []).length === 0 && (
-        <Center py={8}><Text color="gray.400">まだメンバーがいません。</Text></Center>
+        <Center py={8}><Text color="gray.600">まだメンバーがいません。</Text></Center>
       )}
       <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap={6}>
         {(data?.members ?? []).map((m) => (
@@ -292,16 +294,16 @@ export function MembersPage() {
             </Box>
             <Heading as="h2" size="md" mb={1} color="gray.800">{m.name}</Heading>
             <Text color="blue.600" fontWeight="semibold" fontSize="sm" mb={1}>{m.role}</Text>
-            <Text color="gray.400" fontSize="xs" mb={3}>{gradeLabel(m.grade)}</Text>
+            <Text color="gray.600" fontSize="xs" mb={3}>{gradeLabel(m.grade)}</Text>
             {m.bio && <Text color="gray.500" fontSize="sm" lineHeight="tall" mb={4}>{m.bio}</Text>}
             <Box display="flex" gap={3} justifyContent="center" mb={token ? 3 : 0}>
               {m.github && (
-                <Link href={`https://github.com/${m.github}`} target="_blank" rel="noopener noreferrer" color="blue.500" fontSize="sm">
+                <Link href={`https://github.com/${m.github}`} target="_blank" rel="noopener noreferrer" color="blue.600" fontSize="sm">
                   GitHub
                 </Link>
               )}
               {m.twitter && (
-                <Link href={`https://twitter.com/${m.twitter}`} target="_blank" rel="noopener noreferrer" color="blue.500" fontSize="sm">
+                <Link href={`https://twitter.com/${m.twitter}`} target="_blank" rel="noopener noreferrer" color="blue.600" fontSize="sm">
                   X
                 </Link>
               )}

@@ -7,6 +7,7 @@ import {
 } from '@chakra-ui/react';
 import { useAuth } from '../context/AuthContext';
 import { useApiWarming } from '../lib/warmApi';
+import { PageTitle } from '../components/PageTitle';
 import {
   GET_ALL_POSTS_ADMIN, GET_MEMBERS,
   REMOVE_POST, UPDATE_POST,
@@ -40,6 +41,7 @@ export function AdminPage() {
 
   return (
     <Container as="main" maxW="960px" py={12}>
+      <PageTitle title="管理" />
       {/* ヘッダー */}
       <Flex justify="space-between" align="center" mb={8}>
         <Box>
@@ -158,7 +160,7 @@ function PostList({ posts, onDelete, onTogglePublish }: {
   onTogglePublish: (p: PostItem) => void;
 }) {
   if (posts.length === 0) {
-    return <Text color="gray.400" fontSize="sm">記事がありません</Text>;
+    return <Text color="gray.600" fontSize="sm">記事がありません</Text>;
   }
   return (
     <VStack gap={2} align="stretch">
@@ -167,7 +169,7 @@ function PostList({ posts, onDelete, onTogglePublish }: {
           borderBottom="1px solid" borderColor="gray.100" _last={{ border: 'none' }}>
           <Box flex={1} minW={0} mr={3}>
             <Text fontSize="sm" fontWeight="medium" color="gray.800" truncate>{p.title}</Text>
-            <Text fontSize="xs" color="gray.400">
+            <Text fontSize="xs" color="gray.600">
               {p.author.name} · {new Date(p.createdAt).toLocaleDateString('ja-JP')}
             </Text>
           </Box>
