@@ -12,6 +12,7 @@ import { CREATE_POST, UPDATE_POST, GET_POST } from '../graphql/queries';
 import { useAuth } from '../context/AuthContext';
 import { LoadingState } from '../components/LoadingState';
 import { useApiWarming } from '../lib/warmApi';
+import { clearDraft, draftKeyFor, formatSavedAt, loadDraft, saveDraft } from '../lib/draftStorage';
 
 export function PostEditorPage() {
   const { token } = useAuth();
@@ -45,7 +46,11 @@ export function PostEditorPage() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [templateOpen, setTemplateOpen] = useState(false);
-  const [initialized, setInitialized] = useState(false);
+  // 新規作成は読み込むものが無いので最初から初期化済み扱い
+  const [initialized, setInitialized] = useState(!isEdit);
+
+  const draftKey = draftKeyFor(id, type);
+  const [pendingDraft, setPendingDraft] = useState(() => loadDraft(draftKeyFor(id, type)));
 
   useEffect(() => {
     if (isEdit && postData?.post && !initialized) {
@@ -54,6 +59,18 @@ export function PostEditorPage() {
       setInitialized(true);
     }
   }, [isEdit, postData, initialized]);
+
+  // サーバーの内容から変化した分だけを下書きとして退避する。
+  // 保存時に API がコールドスタートで待たされたり失敗しても、書いた内容が消えないようにする
+  const serverTitle = isEdit ? postData?.post?.title ?? '' : '';
+  const serverContent = isEdit ? postData?.post?.content ?? '' : '';
+  const dirty = initialized && (title !== serverTitle || content !== serverContent);
+
+  useEffect(() => {
+    if (!dirty) return;
+    const t = setTimeout(() => saveDraft(draftKey, { title, content }), 1000);
+    return () => clearTimeout(t);
+  }, [dirty, draftKey, title, content]);
 
   if (!token) return <Navigate to="/login" replace />;
   if (isEdit && postLoading) return <LoadingState />;
@@ -71,14 +88,36 @@ export function PostEditorPage() {
         refetchQueries: [{ query: GET_POST, variables: { id: Number(id) } }],
         awaitRefetchQueries: true,
       });
-      if (data) navigate(type === 'ACTIVITY' ? `/activities/${id}` : `/blog/${id}`);
+      if (data) {
+        clearDraft(draftKey);
+        navigate(type === 'ACTIVITY' ? `/activities/${id}` : `/blog/${id}`);
+      }
     } else {
       const { data } = await createPost({
         variables: { input: { title, content, type, published: publish } },
       });
-      if (data) navigate(type === 'ACTIVITY' ? '/activities' : '/blog');
+      if (data) {
+        clearDraft(draftKey);
+        navigate(type === 'ACTIVITY' ? '/activities' : '/blog');
+      }
     }
   };
+
+  const restoreDraft = () => {
+    if (!pendingDraft) return;
+    setTitle(pendingDraft.title);
+    setContent(pendingDraft.content);
+    setPendingDraft(null);
+  };
+
+  const discardDraft = () => {
+    clearDraft(draftKey);
+    setPendingDraft(null);
+  };
+
+  // いま表示している内容と同じ下書きなら知らせる意味がない
+  const showDraftBanner =
+    !!pendingDraft && (pendingDraft.title !== title || pendingDraft.content !== content);
 
   return (
     <Container maxW="800px" py={10}>
@@ -146,6 +185,33 @@ export function PostEditorPage() {
             </Button>
           </HStack>
         </Flex>
+
+        {showDraftBanner && (
+          <Flex
+            bg="orange.50"
+            border="1px solid"
+            borderColor="orange.200"
+            borderRadius="lg"
+            px={4}
+            py={3}
+            align={{ base: 'flex-start', md: 'center' }}
+            justify="space-between"
+            gap={3}
+            flexDir={{ base: 'column', md: 'row' }}
+          >
+            <Text fontSize="sm" color="gray.700">
+              保存されていない下書きがあります（{formatSavedAt(pendingDraft.savedAt)}に自動保存）
+            </Text>
+            <HStack gap={2} flexShrink={0}>
+              <Button size="xs" colorPalette="orange" onClick={restoreDraft}>
+                復元する
+              </Button>
+              <Button size="xs" variant="outline" onClick={discardDraft}>
+                破棄する
+              </Button>
+            </HStack>
+          </Flex>
+        )}
 
         <Field.Root required>
           <Input

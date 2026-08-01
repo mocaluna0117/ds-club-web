@@ -1,5 +1,12 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
+import {
+  UNAUTHENTICATED_EVENT,
+  clearAuth,
+  readAdminName,
+  readToken,
+  saveAuth,
+} from '../lib/authToken';
 
 interface AuthContextType {
   token: string | null;
@@ -11,23 +18,33 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem('ds_club_token'),
-  );
-  const [adminName, setAdminName] = useState<string | null>(
-    localStorage.getItem('ds_club_admin'),
+  // readToken() は期限切れのトークンを破棄して null を返すので、
+  // 期限切れの状態で管理画面を開いてしまうことがない
+  const [token, setToken] = useState<string | null>(() => readToken());
+  const [adminName, setAdminName] = useState<string | null>(() =>
+    readToken() ? readAdminName() : null,
   );
 
+  // サーバーに認証を拒否されたらログイン状態を捨てる。
+  // 管理画面は token が無ければ /login へリダイレクトするので、そのまま案内される
+  useEffect(() => {
+    const handleUnauthenticated = () => {
+      clearAuth();
+      setToken(null);
+      setAdminName(null);
+    };
+    window.addEventListener(UNAUTHENTICATED_EVENT, handleUnauthenticated);
+    return () => window.removeEventListener(UNAUTHENTICATED_EVENT, handleUnauthenticated);
+  }, []);
+
   const login = (newToken: string, name: string) => {
-    localStorage.setItem('ds_club_token', newToken);
-    localStorage.setItem('ds_club_admin', name);
+    saveAuth(newToken, name);
     setToken(newToken);
     setAdminName(name);
   };
 
   const logout = () => {
-    localStorage.removeItem('ds_club_token');
-    localStorage.removeItem('ds_club_admin');
+    clearAuth();
     setToken(null);
     setAdminName(null);
   };

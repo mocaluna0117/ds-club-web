@@ -9,6 +9,7 @@ import { LOGIN } from '../graphql/queries';
 import { useAuth } from '../context/AuthContext';
 import { useSlowFlag } from '../lib/useSlowFlag';
 import { useApiWarming } from '../lib/warmApi';
+import { consumeSessionExpiredFlag } from '../lib/authToken';
 
 export function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -16,6 +17,8 @@ export function LoginPage() {
   const navigate = useNavigate();
   const [doLogin, { loading, error }] = useMutation(LOGIN);
   const slow = useSlowFlag(loading);
+  // 期限切れで戻された場合は理由を伝える (読み取りは1回だけ)
+  const [sessionExpired] = useState(() => consumeSessionExpiredFlag());
 
   // フォームを埋めている十数秒の間に API の起動を進めておく
   useApiWarming();
@@ -44,6 +47,13 @@ export function LoginPage() {
         </Heading>
         <Box as="form" onSubmit={(e) => { e.preventDefault(); void handleSubmit(); }}>
           <VStack gap={5} align="stretch">
+            {sessionExpired && (
+              <Box bg="orange.50" border="1px solid" borderColor="orange.200" borderRadius="md" px={3} py={2}>
+                <Text color="gray.700" fontSize="sm">
+                  ログインの有効期限が切れました。もう一度ログインしてください。
+                </Text>
+              </Box>
+            )}
             <Field.Root required>
               <Field.Label fontWeight="semibold" fontSize="sm">メールアドレス</Field.Label>
               <Input
